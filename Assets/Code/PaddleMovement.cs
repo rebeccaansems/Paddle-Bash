@@ -31,24 +31,9 @@ public class PaddleMovement : MonoBehaviour
             GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, 0);
         }
 
-
-
         if (Input.GetAxisRaw("Rotate") > 0.5f || Input.GetAxisRaw("Rotate") < -0.5f)
         {
             transform.Rotate(Vector3.forward * rotateSpeed * Input.GetAxisRaw("Rotate") * Time.deltaTime);
-        }
-
-        //if (Input.GetKey(KeyCode.E))
-        //{
-        //    transform.Rotate(Vector3.back * rotateSpeed * Time.deltaTime);
-        //}
-    }
-
-    void OnCollisionEnter(Collision col)
-    {
-        if (col.gameObject.name == "prop_powerCube")
-        {
-            Destroy(col.gameObject);
         }
     }
 }
