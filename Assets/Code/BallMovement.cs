@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BallMovement : MonoBehaviour
 {
+    public int PlayerId = 0;
+
     public float maxSpeed = 200f;
     
     void FixedUpdate()
