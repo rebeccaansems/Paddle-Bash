@@ -1,39 +1,53 @@
-﻿using System.Collections;
+﻿using Rewired;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PaddleMovement : MonoBehaviour
 {
-    public float playerSpeed;
-    public float rotateSpeed;
+    public int RewiredPlayerId = 0;
 
+    public float PlayerSpeed;
+    public float RotateSpeed;
+
+    private Player player;
+    private Vector3 moveVector;
+
+    private bool rotateLeft, rotateRight;
     private bool canMove;
 
-    void FixedUpdate()
+
+    private void Awake()
     {
-        if(Input.GetAxisRaw("Horizontal") > 0.5f || Input.GetAxisRaw("Horizontal") < -0.5f)
-        {
-            GetComponent<Rigidbody2D>().velocity = new Vector2(Input.GetAxisRaw("Horizontal") * playerSpeed, GetComponent<Rigidbody2D>().velocity.y);
-        }
+        player = ReInput.players.GetPlayer(RewiredPlayerId);
+    }
 
-        if (Input.GetAxisRaw("Vertical") > 0.5f || Input.GetAxisRaw("Vertical") < -0.5f)
-        {
-            GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, Input.GetAxisRaw("Vertical") * playerSpeed);
-        }
+    private void FixedUpdate()
+    {
+        GetInput();
+        ProcessInput();
+    }
 
-        if(Input.GetAxisRaw("Horizontal") < 0.5f && Input.GetAxisRaw("Horizontal") > -0.5f)
-        {
-            GetComponent<Rigidbody2D>().velocity = new Vector2(0, GetComponent<Rigidbody2D>().velocity.y);
-        }
+    private void GetInput()
+    {
+        moveVector.x = player.GetAxis("Horizontal");
+        moveVector.y = player.GetAxis("Vertical");
 
-        if (Input.GetAxisRaw("Vertical") < 0.5f && Input.GetAxisRaw("Vertical") > -0.5f)
-        {
-            GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, 0);
-        }
+        rotateLeft = player.GetButton("Rotate Left");
+        rotateRight = player.GetButton("Rotate Right");
+    }
 
-        if (Input.GetAxisRaw("Rotate") > 0.5f || Input.GetAxisRaw("Rotate") < -0.5f)
+    private void ProcessInput()
+    {
+        GetComponent<Rigidbody2D>().velocity = moveVector * PlayerSpeed;
+
+        if (rotateLeft && !rotateRight)
         {
-            transform.Rotate(Vector3.forward * rotateSpeed * Input.GetAxisRaw("Rotate") * Time.deltaTime);
+            transform.Rotate(Vector3.forward * RotateSpeed * Time.deltaTime * -1);
+        }
+        else if (!rotateLeft && rotateRight)
+        {
+            transform.Rotate(Vector3.forward * RotateSpeed * Time.deltaTime);
         }
     }
 }
