@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BallMovement : MonoBehaviour
 {
@@ -20,7 +21,8 @@ public class BallMovement : MonoBehaviour
     {
         if (collision.transform.tag == "Finish")
         {
-            Time.timeScale = 0;
+            Scores.k_CurrentScores[PlayerId]++;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 }
