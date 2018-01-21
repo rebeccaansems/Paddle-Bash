@@ -9,7 +9,7 @@ public class BallMovement : MonoBehaviour
     public int PlayerId = 0;
     public float MaxSpeed = 200f, MinSpeed = 10f;
 
-    private Vector2 startLocation;
+    private Vector3 startLocation;
     private Player player;
 
     private void Start()
@@ -22,10 +22,11 @@ public class BallMovement : MonoBehaviour
     {
         GetComponent<Rigidbody2D>().velocity = MinSpeed * (GetComponent<Rigidbody2D>().velocity.normalized);
 
-        if (player.GetButton("Reset Ball"))
+        if (player.GetButton("Reset Ball") && PlayerData.k_BallResets[PlayerId] > 0 && transform.position != startLocation)
         {
             this.transform.position = startLocation;
             GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+            PlayerData.k_BallResets[PlayerId]--;
         }
 
         if (GetComponent<Rigidbody2D>().velocity.magnitude > MaxSpeed)
@@ -39,7 +40,7 @@ public class BallMovement : MonoBehaviour
         if (collision.transform.tag == "Finish")
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            Scores.k_CurrentScores[PlayerId]++;
+            PlayerData.k_CurrentScores[PlayerId]++;
         }
     }
 }
