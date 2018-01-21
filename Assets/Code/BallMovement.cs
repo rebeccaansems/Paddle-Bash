@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class BallMovement : MonoBehaviour
 {
-    public int RewiredPlayerId = 0;
+    public int PlayerId = 0;
     public float MaxSpeed = 200f, MinSpeed = 10f;
 
     private Vector2 startLocation;
@@ -15,7 +15,7 @@ public class BallMovement : MonoBehaviour
     private void Start()
     {
         startLocation = this.transform.position;
-        player = ReInput.players.GetPlayer(RewiredPlayerId);
+        player = ReInput.players.GetPlayer(PlayerId);
     }
 
     private void FixedUpdate()
@@ -39,6 +39,7 @@ public class BallMovement : MonoBehaviour
         if (collision.transform.tag == "Finish")
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            Scores.k_CurrentScores[PlayerId]++;
         }
     }
 }
