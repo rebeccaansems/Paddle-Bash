@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class BallMovement : MonoBehaviour
 {
     public int RewiredPlayerId = 0;
-    public float MaxSpeed = 200f;
+    public float MaxSpeed = 200f, MinSpeed = 10f;
 
     private Vector2 startLocation;
     private Player player;
@@ -20,6 +20,8 @@ public class BallMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        GetComponent<Rigidbody2D>().velocity = MinSpeed * (GetComponent<Rigidbody2D>().velocity.normalized);
+
         if (player.GetButton("Reset Ball"))
         {
             this.transform.position = startLocation;
