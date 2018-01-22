@@ -9,21 +9,14 @@ public class PlayerJoinController : MonoBehaviour
 
     void Update()
     {
-        foreach (Player player in ReInput.players.AllPlayers)
+        for (int i = 0; i < ReInput.players.allPlayerCount - 1; i++)
         {
-            if (player.GetButtonDown("Enter") && !GameData.k_RawRewiredPlayerIds.Contains(player.id))
+            if (ReInput.players.GetPlayer(i).GetButtonDown("Enter") && !GameData.k_RawRewiredPlayerIds.Contains(ReInput.players.GetPlayer(i).id))
             {
-                GameData.k_RawRewiredPlayerIds.Add(player.id);
-                AssignNextPlayer(gamePlayerIdCounter);
+                GameData.k_RawRewiredPlayerIds.Add(ReInput.players.GetPlayer(i).id);
+                GameData.k_Players.Add(new PlayerMap(ReInput.players.GetPlayer(i).id, gamePlayerIdCounter));
+                gamePlayerIdCounter++;
             }
         }
-    }
-
-    void AssignNextPlayer(int rewiredPlayerId)
-    {
-        int gamePlayerId = GameData.k_Players.Count;
-        GameData.k_Players.Add(new PlayerMap(rewiredPlayerId, gamePlayerId));
-        Player rewiredPlayer = ReInput.players.GetPlayer(rewiredPlayerId);
-        gamePlayerIdCounter++;
     }
 }
