@@ -36,7 +36,7 @@ public class PlayerPanelData : MonoBehaviour
             player = ReInput.players.GetPlayer(GameData.k_Players[PlayerId].rewiredPlayerId);
         }
 
-        if (playerJoined == true && playerLocked == false && animator.GetCurrentAnimatorStateInfo(0).IsName("Waiting"))
+        if (playerJoined == true && playerLocked == false && animator.GetCurrentAnimatorStateInfo(0).IsName("Waiting Joined"))
         {
             if (player.GetButtonDown("Enter"))
             {
@@ -48,6 +48,15 @@ public class PlayerPanelData : MonoBehaviour
             {
                 prevColorNumber = ColorNumber;
                 UpdateColors();
+            }
+        }
+
+        if (playerJoined == true && playerLocked == true && animator.GetCurrentAnimatorStateInfo(0).IsName("Waiting Locked"))
+        {
+            if (player.GetButtonDown("Back"))
+            {
+                playerLocked = false;
+                animator.SetBool("PlayerLockedIn", false);
             }
         }
 
