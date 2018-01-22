@@ -24,6 +24,7 @@ public class PlayerPanelData : MonoBehaviour
 
         PlayerName.text = "EMPTY";
         animator = GetComponent<Animator>();
+        UpdateColors();
     }
 
     private void Update()
