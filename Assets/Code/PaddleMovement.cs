@@ -20,6 +20,8 @@ public class PaddleMovement : MonoBehaviour
     private void Awake()
     {
         player = ReInput.players.GetPlayer(RewiredPlayerId);
+        player.controllers.maps.SetMapsEnabled(false, 0);
+        player.controllers.maps.SetMapsEnabled(true, 1);
     }
 
     private void FixedUpdate()

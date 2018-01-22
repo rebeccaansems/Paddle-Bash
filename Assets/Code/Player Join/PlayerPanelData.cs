@@ -5,30 +5,40 @@ using UnityEngine.UI;
 
 public class PlayerPanelData : MonoBehaviour
 {
-
     public Text PlayerName;
     public PaddleBeam PaddleBeam;
+
     public int PlayerId, ColorNumber;
+
+    private Animator animator;
 
     private int prevColorNumber = 0;
 
     private void Start()
     {
         PlayerName.text = "EMPTY";
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
     {
-        if (prevColorNumber != ColorNumber)
+        if (GameData.k_Players.Count > PlayerId && animator.GetBool("PlayerJoined") == false)
         {
-            prevColorNumber = ColorNumber;
-            UpdateColors();
+            animator.SetBool("PlayerJoined", true);
+        }
+        else if (GameData.k_Players.Count > PlayerId)
+        {
+            if (prevColorNumber != ColorNumber)
+            {
+                prevColorNumber = ColorNumber;
+                UpdateColors();
+            }
         }
     }
 
     public void ChangeNameDisplayText()
     {
-        PlayerName.text = "PLAYER 0" + PlayerId + 1;
+        PlayerName.text = "PLAYER 0" + (PlayerId + 1);
     }
 
     public void UpdateColors()
