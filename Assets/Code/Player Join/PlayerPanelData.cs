@@ -15,16 +15,17 @@ public class PlayerPanelData : MonoBehaviour
     private Player player;
 
     private int prevColorNumber = 0;
-    private bool playerJoined, playerLocked;
+    private bool playerJoined, playerLocked, canUpdateColor;
 
     private void Start()
     {
         playerJoined = false;
         playerLocked = false;
+        canUpdateColor = true;
 
         PlayerName.text = "EMPTY";
         animator = GetComponent<Animator>();
-        UpdateColors();
+        UpdateColors(0);
     }
 
     private void Update()
@@ -35,8 +36,7 @@ public class PlayerPanelData : MonoBehaviour
             animator.SetBool("PlayerJoined", true);
             player = ReInput.players.GetPlayer(GameData.k_Players[PlayerId].rewiredPlayerId);
         }
-
-        if (playerJoined == true && playerLocked == false && animator.GetCurrentAnimatorStateInfo(0).IsName("Waiting Joined"))
+        else if (playerJoined == true && playerLocked == false && animator.GetCurrentAnimatorStateInfo(0).IsName("Waiting Joined"))
         {
             if (player.GetButtonDown("Enter"))
             {
@@ -44,14 +44,12 @@ public class PlayerPanelData : MonoBehaviour
                 animator.SetBool("PlayerLockedIn", true);
             }
 
-            if (prevColorNumber != ColorNumber)
+            if (player.GetAxis("Horizontal Menu") != 0 && canUpdateColor)
             {
-                prevColorNumber = ColorNumber;
-                UpdateColors();
+                StartCoroutine(WaitForColorUpdate());
             }
         }
-
-        if (playerJoined == true && playerLocked == true && animator.GetCurrentAnimatorStateInfo(0).IsName("Waiting Locked"))
+        else if (playerJoined == true && playerLocked == true && animator.GetCurrentAnimatorStateInfo(0).IsName("Waiting Locked"))
         {
             if (player.GetButtonDown("Back"))
             {
@@ -59,7 +57,6 @@ public class PlayerPanelData : MonoBehaviour
                 animator.SetBool("PlayerLockedIn", false);
             }
         }
-
     }
 
     public void ChangeNameDisplayText()
@@ -67,11 +64,36 @@ public class PlayerPanelData : MonoBehaviour
         PlayerName.text = "PLAYER 0" + (PlayerId + 1);
     }
 
-    public void UpdateColors()
+    private IEnumerator WaitForColorUpdate()
     {
-        if (PaddleBeam != null)
+        canUpdateColor = false;
+        UpdateColors(player.GetAxis("Horizontal Menu"));
+        yield return new WaitForSeconds(0.3f);
+        canUpdateColor = true;
+    }
+
+    public void UpdateColors(float change)
+    {
+        if (change > 0)
         {
-            PaddleBeam.SetColor(ColorNumber);
+            change = 1;
         }
+        else if (change < 0)
+        {
+            change = -1;
+        }
+
+        ColorNumber += (int)change;
+
+        if (ColorNumber < 0)
+        {
+            ColorNumber = 4;
+        }
+        else if (ColorNumber > 4)
+        {
+            ColorNumber = 0;
+        }
+
+        PaddleBeam.SetColor(ColorNumber);
     }
 }
