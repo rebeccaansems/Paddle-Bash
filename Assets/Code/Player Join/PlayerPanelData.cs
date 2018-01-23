@@ -12,7 +12,7 @@ public class PlayerPanelData : MonoBehaviour
     public int PlayerId, ColorNumber;
 
     private Animator animator;
-    private Player player;
+    private Player currentPlayer;
 
     private bool playerJoined, playerLocked, canUpdateColor;
 
@@ -35,23 +35,24 @@ public class PlayerPanelData : MonoBehaviour
         {
             playerJoined = true;
             animator.SetBool("PlayerJoined", true);
-            player = ReInput.players.GetPlayer(GameData.k_Players[PlayerId].RewiredPlayerId);
+            currentPlayer = ReInput.players.GetPlayer(GameData.k_Players[PlayerId].RewiredPlayerId);
+            GameData.k_Players[PlayerId].PanelData = this;
         }
         else if (playerJoined == true && playerLocked == false && animator.GetCurrentAnimatorStateInfo(0).IsName("Waiting Joined"))
         {
-            if (player.GetAxis("Horizontal Menu") != 0 && canUpdateColor)
+            if (currentPlayer.GetAxis("Horizontal Menu") != 0 && canUpdateColor)
             {
                 StartCoroutine(WaitForColorUpdate());
             }
 
-            if (player.GetButtonDown("Enter"))
+            if (currentPlayer.GetButtonDown("Enter"))
             {
                 LockPlayer();
             }
         }
         else if (playerJoined == true && playerLocked == true && animator.GetCurrentAnimatorStateInfo(0).IsName("Waiting Locked"))
         {
-            if (player.GetButtonDown("Back"))
+            if (currentPlayer.GetButtonDown("Back"))
             {
                 UnlockPlayer();
             }
@@ -66,7 +67,7 @@ public class PlayerPanelData : MonoBehaviour
     private IEnumerator WaitForColorUpdate()
     {
         canUpdateColor = false;
-        UpdateColors(player.GetAxis("Horizontal Menu"));
+        UpdateColors(currentPlayer.GetAxis("Horizontal Menu"));
         yield return new WaitForSeconds(0.3f);
         canUpdateColor = true;
     }
@@ -105,6 +106,11 @@ public class PlayerPanelData : MonoBehaviour
                     colorIsValid = false;
                 }
             }
+
+            if (change == 0)
+            {
+                change = 1;
+            }
         }
 
         PaddleBeam.SetColor(ColorNumber);
@@ -129,6 +135,14 @@ public class PlayerPanelData : MonoBehaviour
         playerLocked = true;
         animator.SetBool("PlayerLockedIn", true);
         GameData.k_Players[PlayerId].PlayerColor = ColorNumber;
+
+        foreach (PlayerData player in GameData.k_Players)
+        {
+            if (player != GameData.k_Players[PlayerId] && !player.PanelData.playerLocked)
+            {
+                player.PanelData.UpdateColors(0);
+            }
+        }
     }
 
     private void UnlockPlayer()
