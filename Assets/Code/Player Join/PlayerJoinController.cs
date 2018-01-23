@@ -14,7 +14,7 @@ public class PlayerJoinController : MonoBehaviour
             if (ReInput.players.GetPlayer(i).GetButtonDown("Enter") && !GameData.k_RawRewiredPlayerIds.Contains(ReInput.players.GetPlayer(i).id))
             {
                 GameData.k_RawRewiredPlayerIds.Add(ReInput.players.GetPlayer(i).id);
-                GameData.k_Players.Add(new PlayerMap(ReInput.players.GetPlayer(i).id, gamePlayerIdCounter));
+                GameData.k_Players.Add(new PlayerData(ReInput.players.GetPlayer(i).id, gamePlayerIdCounter));
                 gamePlayerIdCounter++;
             }
         }
