@@ -88,7 +88,7 @@ public class PlayerPanelData : MonoBehaviour
 
         foreach (PlayerData player in GameData.k_Players)
         {
-            if (player.PlayerColor == ColorNumber)
+            if (player.PlayerColor == ColorNumber && player != GameData.k_Players[PlayerId])
             {
                 colorIsValid = false;
             }
@@ -101,7 +101,7 @@ public class PlayerPanelData : MonoBehaviour
 
             foreach (PlayerData player in GameData.k_Players)
             {
-                if (player.PlayerColor == ColorNumber)
+                if (player.PlayerColor == ColorNumber && player != GameData.k_Players[PlayerId])
                 {
                     colorIsValid = false;
                 }
