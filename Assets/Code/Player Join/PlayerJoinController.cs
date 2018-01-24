@@ -5,6 +5,8 @@ using Rewired;
 
 public class PlayerJoinController : MonoBehaviour
 {
+    public Animator StartGameAnimator;
+
     private int gamePlayerIdCounter = 0;
 
     void Update()
@@ -17,6 +19,24 @@ public class PlayerJoinController : MonoBehaviour
                 GameData.k_Players.Add(new PlayerData(ReInput.players.GetPlayer(i).id, gamePlayerIdCounter));
                 gamePlayerIdCounter++;
             }
+        }
+
+        int readyCount = 0;
+        for (int i = 0; i < GameData.k_Players.Count; i++)
+        {
+            if (GameData.k_Players[i].PanelData != null && GameData.k_Players[i].PanelData.PlayerLocked)
+            {
+                readyCount++;
+            }
+        }
+
+        if (readyCount > 1)
+        {
+            StartGameAnimator.SetBool("GameCanStart", true);
+        }
+        else
+        {
+            StartGameAnimator.SetBool("GameCanStart", false);
         }
     }
 }

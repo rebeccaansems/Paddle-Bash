@@ -10,16 +10,17 @@ public class PlayerPanelData : MonoBehaviour
     public PaddleBeam PaddleBeam;
 
     public int PlayerId, ColorNumber;
+    public bool PlayerLocked;
 
     private Animator animator;
     private Player currentPlayer;
 
-    private bool playerJoined, playerLocked, canUpdateColor;
+    private bool playerJoined, canUpdateColor;
 
     private void Start()
     {
         playerJoined = false;
-        playerLocked = false;
+        PlayerLocked = false;
         canUpdateColor = true;
 
         PlayerName.text = "EMPTY";
@@ -33,12 +34,13 @@ public class PlayerPanelData : MonoBehaviour
     {
         if (GameData.k_Players.Count > PlayerId && playerJoined == false)
         {
+            PaddleBeam.SetColor(0);
             playerJoined = true;
             animator.SetBool("PlayerJoined", true);
             currentPlayer = ReInput.players.GetPlayer(GameData.k_Players[PlayerId].RewiredPlayerId);
             GameData.k_Players[PlayerId].PanelData = this;
         }
-        else if (playerJoined == true && playerLocked == false && animator.GetCurrentAnimatorStateInfo(0).IsName("Waiting Joined"))
+        else if (playerJoined == true && PlayerLocked == false && animator.GetCurrentAnimatorStateInfo(0).IsName("Waiting Joined"))
         {
             if (currentPlayer.GetAxis("Horizontal Menu") != 0 && canUpdateColor)
             {
@@ -49,8 +51,13 @@ public class PlayerPanelData : MonoBehaviour
             {
                 LockPlayer();
             }
+
+            if (currentPlayer.GetButtonDown("Back"))
+            {
+                UnjoinedPlayer();
+            }
         }
-        else if (playerJoined == true && playerLocked == true && animator.GetCurrentAnimatorStateInfo(0).IsName("Waiting Locked"))
+        else if (playerJoined == true && PlayerLocked == true && animator.GetCurrentAnimatorStateInfo(0).IsName("Waiting Locked"))
         {
             if (currentPlayer.GetButtonDown("Back"))
             {
@@ -132,13 +139,13 @@ public class PlayerPanelData : MonoBehaviour
 
     private void LockPlayer()
     {
-        playerLocked = true;
+        PlayerLocked = true;
         animator.SetBool("PlayerLockedIn", true);
         GameData.k_Players[PlayerId].PlayerColor = ColorNumber;
 
         foreach (PlayerData player in GameData.k_Players)
         {
-            if (player != GameData.k_Players[PlayerId] && !player.PanelData.playerLocked)
+            if (player != GameData.k_Players[PlayerId] && !player.PanelData.PlayerLocked)
             {
                 player.PanelData.UpdateColors(0);
             }
@@ -147,8 +154,21 @@ public class PlayerPanelData : MonoBehaviour
 
     private void UnlockPlayer()
     {
-        playerLocked = false;
+        PlayerLocked = false;
         animator.SetBool("PlayerLockedIn", false);
         GameData.k_Players[PlayerId].PlayerColor = -1;
+    }
+
+    private void UnjoinedPlayer()
+    {
+        animator.SetBool("PlayerJoined", false);
+        GameData.k_RawRewiredPlayerIds.Remove(GameData.k_Players[PlayerId].RewiredPlayerId);
+        GameData.k_Players.Remove(GameData.k_Players[PlayerId]);
+
+        playerJoined = false;
+        PlayerLocked = false;
+        canUpdateColor = true;
+
+        PlayerName.text = "EMPTY";
     }
 }
