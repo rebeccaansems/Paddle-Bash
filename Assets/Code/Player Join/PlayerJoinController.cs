@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
+using System.Linq;
 
 public class PlayerJoinController : MonoBehaviour
 {
@@ -20,23 +21,25 @@ public class PlayerJoinController : MonoBehaviour
                 gamePlayerIdCounter++;
             }
         }
-
-        int readyCount = 0;
-        for (int i = 0; i < GameData.k_Players.Count; i++)
-        {
-            if (GameData.k_Players[i].PanelData != null && GameData.k_Players[i].PanelData.PlayerLocked)
-            {
-                readyCount++;
-            }
-        }
-
-        if (readyCount > 1)
+        
+        int readyPlayers = GameData.k_Players.Where(x => x.PanelData != null && x.PanelData.PlayerLocked == true).Count();
+        if (readyPlayers > 1 && StartGameAnimator.GetBool("GameCanStart") == false)
         {
             StartGameAnimator.SetBool("GameCanStart", true);
         }
-        else
+        else if (readyPlayers < 1 && StartGameAnimator.GetBool("GameCanStart") == true)
         {
             StartGameAnimator.SetBool("GameCanStart", false);
+        }
+        else if (readyPlayers > 1 && StartGameAnimator.GetBool("GameCanStart") == true)
+        {
+            foreach (PlayerData player in GameData.k_Players.Where(x => x.PanelData.PlayerLocked == true))
+            {
+                if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter"))
+                {
+                    Debug.Log("START");
+                }
+            }
         }
     }
 }
