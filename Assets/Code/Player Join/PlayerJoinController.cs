@@ -33,7 +33,7 @@ public class PlayerJoinController : MonoBehaviour
         }
         else if (readyPlayers > 1 && StartGameAnimator.GetBool("GameCanStart") == true)
         {
-            foreach (PlayerData player in GameData.k_Players.Where(x => x.PanelData.PlayerLocked == true))
+            foreach (PlayerData player in GameData.GetNonNullPlayers().Where(x => x.PanelData.PlayerLocked == true))
             {
                 if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter"))
                 {

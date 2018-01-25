@@ -28,18 +28,18 @@ public class PlayerPanelData : MonoBehaviour
         animator = GetComponent<Animator>();
         animator.SetInteger("Highlight", PlayerId);
 
-        PaddleBeam.SetColor(0);
+        ColorNumber = PlayerId;
     }
 
     private void Update()
     {
         if (GameData.k_Players[PlayerId] != null && playerJoined == false)
         {
-            PaddleBeam.SetColor(0);
             playerJoined = true;
             animator.SetBool("PlayerJoined", true);
             currentPlayer = ReInput.players.GetPlayer(GameData.k_Players[PlayerId].RewiredPlayerId);
             GameData.k_Players[PlayerId].PanelData = this;
+            UpdateColors(1);
         }
         else if (playerJoined == true && PlayerLocked == false && animator.GetCurrentAnimatorStateInfo(0).IsName("Waiting Joined"))
         {
@@ -91,51 +91,28 @@ public class PlayerPanelData : MonoBehaviour
             change = -1;
         }
 
-        bool colorIsValid = true;
-        UpdateCurrentColor((int)change);
+        UpdateColorNumber((int)change);
 
-        foreach (PlayerData player in GameData.GetNonNullPlayers())
-        {
-            if (player.PlayerColor == ColorNumber && player != GameData.k_Players[PlayerId])
-            {
-                colorIsValid = false;
-            }
-        }
-
+        bool colorIsValid = false;
         while (colorIsValid == false)
         {
-            UpdateCurrentColor((int)change);
             colorIsValid = true;
 
             foreach (PlayerData player in GameData.GetNonNullPlayers())
             {
-                if (player.PlayerColor == ColorNumber && player != GameData.k_Players[PlayerId])
+                if (player.PlayerColor == ColorNumber && player.PanelData.PlayerId != PlayerId)
                 {
                     colorIsValid = false;
                 }
             }
 
-            if (change == 0)
+            if (colorIsValid == false)
             {
-                change = 1;
+                UpdateColorNumber((int)change);
             }
         }
 
         PaddleBeam.SetColor(ColorNumber);
-    }
-
-    private void UpdateCurrentColor(int change)
-    {
-        ColorNumber += change;
-
-        if (ColorNumber < 0)
-        {
-            ColorNumber = 4;
-        }
-        else if (ColorNumber > 4)
-        {
-            ColorNumber = 0;
-        }
     }
 
     private void LockPlayer()
@@ -146,9 +123,9 @@ public class PlayerPanelData : MonoBehaviour
 
         foreach (PlayerData player in GameData.GetNonNullPlayers())
         {
-            if (player != GameData.k_Players[PlayerId] && !player.PanelData.PlayerLocked)
+            if (player.PanelData.PlayerId != PlayerId && !player.PanelData.PlayerLocked && player.PanelData.ColorNumber == ColorNumber)
             {
-                player.PanelData.UpdateColors(0);
+                player.PanelData.UpdateColors(1);
             }
         }
     }
@@ -172,5 +149,19 @@ public class PlayerPanelData : MonoBehaviour
         canUpdateColor = true;
 
         PlayerName.text = "EMPTY";
+    }
+
+    private void UpdateColorNumber(int change)
+    {
+        ColorNumber += change;
+
+        if (ColorNumber < 0)
+        {
+            ColorNumber = 4;
+        }
+        else if (ColorNumber > 4)
+        {
+            ColorNumber = 0;
+        }
     }
 }
