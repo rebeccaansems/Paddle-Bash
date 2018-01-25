@@ -16,13 +16,13 @@ public class PlayerJoinController : MonoBehaviour
         {
             if (ReInput.players.GetPlayer(i).GetButtonDown("Enter") && !GameData.k_RawRewiredPlayerIds.Contains(ReInput.players.GetPlayer(i).id))
             {
+                GameData.k_Players[System.Array.IndexOf(GameData.k_Players, null)] =  new PlayerData(ReInput.players.GetPlayer(i).id, gamePlayerIdCounter);
                 GameData.k_RawRewiredPlayerIds.Add(ReInput.players.GetPlayer(i).id);
-                GameData.k_Players.Add(new PlayerData(ReInput.players.GetPlayer(i).id, gamePlayerIdCounter));
                 gamePlayerIdCounter++;
             }
         }
         
-        int readyPlayers = GameData.k_Players.Where(x => x.PanelData != null && x.PanelData.PlayerLocked == true).Count();
+        int readyPlayers = GameData.k_Players.Where(x => x != null && x.PanelData != null && x.PanelData.PlayerLocked == true).Count();
         if (readyPlayers > 1 && StartGameAnimator.GetBool("GameCanStart") == false)
         {
             StartGameAnimator.SetBool("GameCanStart", true);

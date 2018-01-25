@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Rewired;
+using System.Linq;
 
 public class PlayerPanelData : MonoBehaviour
 {
@@ -32,7 +33,7 @@ public class PlayerPanelData : MonoBehaviour
 
     private void Update()
     {
-        if (GameData.k_Players.Count > PlayerId && playerJoined == false)
+        if (GameData.k_Players[PlayerId] != null && playerJoined == false)
         {
             PaddleBeam.SetColor(0);
             playerJoined = true;
@@ -93,7 +94,7 @@ public class PlayerPanelData : MonoBehaviour
         bool colorIsValid = true;
         UpdateCurrentColor((int)change);
 
-        foreach (PlayerData player in GameData.k_Players)
+        foreach (PlayerData player in GameData.GetNonNullPlayers())
         {
             if (player.PlayerColor == ColorNumber && player != GameData.k_Players[PlayerId])
             {
@@ -106,7 +107,7 @@ public class PlayerPanelData : MonoBehaviour
             UpdateCurrentColor((int)change);
             colorIsValid = true;
 
-            foreach (PlayerData player in GameData.k_Players)
+            foreach (PlayerData player in GameData.GetNonNullPlayers())
             {
                 if (player.PlayerColor == ColorNumber && player != GameData.k_Players[PlayerId])
                 {
@@ -143,7 +144,7 @@ public class PlayerPanelData : MonoBehaviour
         animator.SetBool("PlayerLockedIn", true);
         GameData.k_Players[PlayerId].PlayerColor = ColorNumber;
 
-        foreach (PlayerData player in GameData.k_Players)
+        foreach (PlayerData player in GameData.GetNonNullPlayers())
         {
             if (player != GameData.k_Players[PlayerId] && !player.PanelData.PlayerLocked)
             {
@@ -162,8 +163,9 @@ public class PlayerPanelData : MonoBehaviour
     private void UnjoinedPlayer()
     {
         animator.SetBool("PlayerJoined", false);
+
         GameData.k_RawRewiredPlayerIds.Remove(GameData.k_Players[PlayerId].RewiredPlayerId);
-        GameData.k_Players.Remove(GameData.k_Players[PlayerId]);
+        GameData.k_Players[PlayerId] = null;
 
         playerJoined = false;
         PlayerLocked = false;
