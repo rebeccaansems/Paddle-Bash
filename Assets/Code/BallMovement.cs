@@ -8,18 +8,19 @@ public class BallMovement : MonoBehaviour
 {
     public int PlayerNum = 0;
     public float MaxSpeed = 200f, MinSpeed = 10f;
-
-    private Vector3 startLocation;
+    
     private Player player;
 
-    private void Start()
+    private void Awake()
     {
         if (GameData.k_Players[PlayerNum] == null)
         {
             Destroy(this.gameObject);
         }
-
-        startLocation = this.transform.position;
+        else
+        {
+            this.GetComponent<BallBeam>().SetColor(GameData.k_Players[PlayerNum].PlayerColor);
+        }
     }
 
     private void FixedUpdate()
