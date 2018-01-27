@@ -30,6 +30,7 @@ public class PaddleMovement : MonoBehaviour
             player = ReInput.players.GetPlayer(rewiredPlayerId);
             player.controllers.maps.SetMapsEnabled(true, "Game");
             player.controllers.maps.SetMapsEnabled(false, "Menu");
+            this.GetComponent<PaddleBeam>().SetColor(GameData.k_Players[PlayerNum].PlayerColor);
         }
     }
 
