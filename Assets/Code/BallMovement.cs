@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class BallMovement : MonoBehaviour
 {
-    public int PlayerId = 0;
+    public int PlayerNum = 0;
     public float MaxSpeed = 200f, MinSpeed = 10f;
 
     private Vector3 startLocation;
@@ -14,8 +14,12 @@ public class BallMovement : MonoBehaviour
 
     private void Start()
     {
+        if (GameData.k_Players[PlayerNum] == null)
+        {
+            Destroy(this.gameObject);
+        }
+
         startLocation = this.transform.position;
-        player = ReInput.players.GetPlayer(PlayerId);
     }
 
     private void FixedUpdate()
