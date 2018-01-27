@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Rewired;
 using System.Linq;
 
@@ -37,7 +38,7 @@ public class PlayerJoinController : MonoBehaviour
             {
                 if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter"))
                 {
-                    Debug.Log("START");
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
                 }
             }
         }

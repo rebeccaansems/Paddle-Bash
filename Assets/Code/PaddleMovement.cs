@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PaddleMovement : MonoBehaviour
 {
-    public int RewiredPlayerId = 0;
+    public int PlayerNum;
 
     public float PlayerSpeed;
     public float RotateSpeed;
@@ -13,15 +13,24 @@ public class PaddleMovement : MonoBehaviour
     private Player player;
     private Vector3 moveVector;
 
+    private int rewiredPlayerId = 0;
+
     private bool rotateLeft, rotateRight;
-    private bool canMove;
 
 
     private void Awake()
     {
-        player = ReInput.players.GetPlayer(RewiredPlayerId);
-        player.controllers.maps.SetMapsEnabled(false, 0);
-        player.controllers.maps.SetMapsEnabled(true, 1);
+        if (GameData.k_Players[PlayerNum] == null)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            rewiredPlayerId = GameData.k_Players[PlayerNum].RewiredPlayerId;
+            player = ReInput.players.GetPlayer(rewiredPlayerId);
+            player.controllers.maps.SetMapsEnabled(true, "Game");
+            player.controllers.maps.SetMapsEnabled(false, "Menu");
+        }
     }
 
     private void FixedUpdate()

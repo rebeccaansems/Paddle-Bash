@@ -11,6 +11,7 @@ public class GameData : MonoBehaviour
 
     void Start()
     {
+        DontDestroyOnLoad(this.gameObject);
         k_Players = new PlayerData[4];
         k_RawRewiredPlayerIds = new List<int>();
     }
