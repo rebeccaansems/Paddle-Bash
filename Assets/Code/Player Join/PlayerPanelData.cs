@@ -72,6 +72,11 @@ public class PlayerPanelData : MonoBehaviour
         PlayerName.text = "PLAYER 0" + (PlayerId + 1);
     }
 
+    public void ResetPlayerDisplayText()
+    {
+        PlayerName.text = "EMPTY";
+    }
+
     private IEnumerator WaitForColorUpdate()
     {
         canUpdateColor = false;
@@ -147,8 +152,6 @@ public class PlayerPanelData : MonoBehaviour
         playerJoined = false;
         PlayerLocked = false;
         canUpdateColor = true;
-
-        PlayerName.text = "EMPTY";
     }
 
     private void UpdateColorNumber(int change)
