@@ -11,7 +11,7 @@ public class BallMovement : MonoBehaviour
     
     private Player player;
 
-    private void Awake()
+    private void Start()
     {
         if (GameData.k_Players[PlayerNum] == null)
         {

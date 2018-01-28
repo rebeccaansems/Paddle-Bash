@@ -59,7 +59,7 @@ public class PaddleMovement : MonoBehaviour
         }
         else if (!rotateLeft && rotateRight)
         {
-            transform.Rotate(Vector3.forward * RotateSpeed * Time.deltaTime * -1);
+            transform.Rotate(Vector3.back * RotateSpeed * Time.deltaTime);
         }
     }
 }
