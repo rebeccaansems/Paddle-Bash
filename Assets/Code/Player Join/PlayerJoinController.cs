@@ -28,7 +28,7 @@ public class PlayerJoinController : MonoBehaviour
         {
             StartGameAnimator.SetBool("GameCanStart", true);
         }
-        else if (readyPlayers < 1 && StartGameAnimator.GetBool("GameCanStart") == true)
+        else if (readyPlayers <= 1 && StartGameAnimator.GetBool("GameCanStart") == true)
         {
             StartGameAnimator.SetBool("GameCanStart", false);
         }
