@@ -8,6 +8,8 @@ public class BallMovement : MonoBehaviour
 {
     public int PlayerNum = 0;
     public float MaxSpeed = 200f, MinSpeed = 10f;
+
+    public GameObject LinkedPlayer;
     
     private Player player;
 
@@ -38,6 +40,7 @@ public class BallMovement : MonoBehaviour
         if (collision.transform.tag == "Finish")
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            LinkedPlayer.GetComponent<PaddleMovement>().PlayerData.Score += 1;
         }
     }
 }

@@ -4,6 +4,8 @@
 
     public int PlayerColor = -1;
 
+    public int Score = 0;
+
     public PlayerPanelData PanelData;
 
     public PlayerData(int rewiredPlayerId, int gamePlayerId)
