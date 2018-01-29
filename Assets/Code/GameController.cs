@@ -7,6 +7,10 @@ using System.Linq;
 public class GameController : MonoBehaviour
 {
     public Text CurrentScore;
+    public GameObject Ball;
+    public Transform BallParent;
+    public Vector2[] BallSpawnLocations;
+    public PaddleMovement[] Players;
 
     void Start()
     {
@@ -16,5 +20,15 @@ public class GameController : MonoBehaviour
             currScore += players.Score + " | ";
         }
         CurrentScore.text = currScore.TrimEnd('|', ' ');
+
+        for (int i = 0; i < GameData.k_Players.Where(x => x != null).ToArray().Length; i++)
+        {
+            var newBall = Instantiate(Ball);
+            newBall.GetComponent<BallMovement>().PlayerNum = i;
+            newBall.GetComponent<BallBeam>().SetColor(GameData.k_Players[i].PlayerColor);
+            newBall.transform.position = BallSpawnLocations[i];
+            newBall.transform.parent = BallParent;
+            newBall.GetComponent<BallMovement>().PlayerNum = i;
+        }
     }
 }

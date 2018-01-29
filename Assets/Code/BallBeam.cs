@@ -12,8 +12,16 @@ public class BallBeam : MonoBehaviour
     public Gradient[] Trail;
     public Material[] TrailMat;
 
+    public void Awake()
+    {
+        var bigGlowEmission = BigGlowGameObject.GetComponent<ParticleSystem>().emission;
+        bigGlowEmission.enabled = false;
+        PointLightGameObject.GetComponent<Light>().enabled = false;
+    }
+
     public void SetColor(int colorNum)
     {
+        var bigGlowEmission = BigGlowGameObject.GetComponent<ParticleSystem>().emission;
         var trailColorLifetime = TrailGameObject.GetComponent<ParticleSystem>().colorOverLifetime;
         var bigGlowStartColor = BigGlowGameObject.GetComponent<ParticleSystem>().main;
         var pointLightStart = PointLightGameObject.GetComponent<Light>();
@@ -24,5 +32,8 @@ public class BallBeam : MonoBehaviour
         bigGlowStartColor.startColor = Glow[colorNum];
 
         pointLightStart.color = PointLight[colorNum];
+        
+        PointLightGameObject.GetComponent<Light>().enabled = true;
+        bigGlowEmission.enabled = true;
     }
 }
