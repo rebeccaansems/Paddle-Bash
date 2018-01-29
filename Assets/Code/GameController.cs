@@ -7,10 +7,11 @@ using System.Linq;
 public class GameController : MonoBehaviour
 {
     public Text CurrentScore;
-    public GameObject Ball;
     public Transform BallParent;
+    public GameObject Ball;
+
+    public GameObject[] Players;
     public Vector2[] BallSpawnLocations;
-    public PaddleMovement[] Players;
 
     void Start()
     {
@@ -24,11 +25,11 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < GameData.k_Players.Where(x => x != null).ToArray().Length; i++)
         {
             var newBall = Instantiate(Ball);
-            newBall.GetComponent<BallMovement>().PlayerNum = i;
-            newBall.GetComponent<BallBeam>().SetColor(GameData.k_Players[i].PlayerColor);
             newBall.transform.position = BallSpawnLocations[i];
             newBall.transform.parent = BallParent;
             newBall.GetComponent<BallMovement>().PlayerNum = i;
+            newBall.GetComponent<BallBeam>().SetColor(GameData.k_Players[i].PlayerColor);
+            newBall.GetComponent<BallMovement>().LinkedPlayer = Players[i];
         }
     }
 }
