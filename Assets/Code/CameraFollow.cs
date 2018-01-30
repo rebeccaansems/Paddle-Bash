@@ -38,7 +38,7 @@ public class CameraFollow : MonoBehaviour
         OrthoCamera.transform.parent = this.transform;
         
         Time.timeScale = 0.4f;
-        Time.fixedDeltaTime = 0.02F * Time.timeScale;
+        Time.fixedDeltaTime = Time.fixedDeltaTime * Time.timeScale;
 
         StartCoroutine(RestartGame());
     }
