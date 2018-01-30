@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 
@@ -9,6 +7,7 @@ public class GameController : MonoBehaviour
     public Text CurrentScore;
     public Transform BallParent;
     public GameObject Ball;
+    public CameraFollow FollowCamera;
 
     public GameObject[] Players;
     public Vector2[] BallSpawnLocations;
@@ -27,6 +26,7 @@ public class GameController : MonoBehaviour
             var newBall = Instantiate(Ball);
             newBall.transform.position = BallSpawnLocations[i];
             newBall.transform.parent = BallParent;
+            newBall.GetComponent<BallMovement>().Camera = FollowCamera;
             newBall.GetComponent<BallMovement>().PlayerNum = i;
             newBall.GetComponent<BallBeam>().SetColor(GameData.k_Players[i].PlayerColor);
             newBall.GetComponent<BallMovement>().LinkedPlayer = Players[i];

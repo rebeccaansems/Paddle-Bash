@@ -1,8 +1,5 @@
 ﻿using Rewired;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class BallMovement : MonoBehaviour
 {
@@ -10,6 +7,7 @@ public class BallMovement : MonoBehaviour
     public float MaxSpeed = 200f, MinSpeed = 10f;
 
     public GameObject LinkedPlayer;
+    public CameraFollow Camera;
     
     private Player player;
 
@@ -39,8 +37,9 @@ public class BallMovement : MonoBehaviour
     {
         if (collision.transform.tag == "Finish")
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             LinkedPlayer.GetComponent<PaddleMovement>().PlayerData.Score += 1;
+            collision.gameObject.GetComponent<CircleCollider2D>().enabled = false;
+            Camera.FollowPlayer(PlayerNum);
         }
     }
 }

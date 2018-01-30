@@ -54,15 +54,15 @@ public class PaddleMovement : MonoBehaviour
 
     private void ProcessInput()
     {
-        GetComponent<Rigidbody2D>().velocity = moveVector * PlayerSpeed;
+        GetComponent<Rigidbody2D>().velocity = moveVector * PlayerSpeed * Time.fixedDeltaTime;
 
         if (rotateLeft && !rotateRight)
         {
-            transform.Rotate(Vector3.forward * RotateSpeed * Time.deltaTime);
+            transform.Rotate(Vector3.forward * RotateSpeed * Time.fixedDeltaTime);
         }
         else if (!rotateLeft && rotateRight)
         {
-            transform.Rotate(Vector3.back * RotateSpeed * Time.deltaTime);
+            transform.Rotate(Vector3.back * RotateSpeed * Time.fixedDeltaTime);
         }
     }
 }
