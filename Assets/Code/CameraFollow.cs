@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class CameraFollow : MonoBehaviour
 {
-    public Camera MainCamera;
+    public Camera MainCamera, OrthoCamera;
     public Transform[] Players;
 
     private int follow;
@@ -33,8 +33,13 @@ public class CameraFollow : MonoBehaviour
         MainCamera.enabled = false;
         this.GetComponent<Camera>().enabled = true;
         follow = playerNum;
+        
+        OrthoCamera.orthographicSize = 1.4f;
+        OrthoCamera.transform.parent = this.transform;
+        
         Time.timeScale = 0.4f;
         Time.fixedDeltaTime = 0.02F * Time.timeScale;
+
         StartCoroutine(RestartGame());
     }
 
