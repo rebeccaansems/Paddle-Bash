@@ -37,6 +37,11 @@ public class PaddleMovement : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+       // transform.rotation = Quaternion.Euler(transform.rotation.x, 0, transform.rotation.y);
+    }
+
     private void FixedUpdate()
     {
         GetInput();
@@ -58,11 +63,16 @@ public class PaddleMovement : MonoBehaviour
 
         if (rotateLeft && !rotateRight)
         {
-            transform.Rotate(Vector3.forward * RotateSpeed * Time.fixedDeltaTime);
+            GetComponent<Rigidbody2D>().freezeRotation = false;
+            GetComponent<Rigidbody2D>().AddTorque(RotateSpeed * Time.fixedDeltaTime, ForceMode2D.Impulse);
         }
         else if (!rotateLeft && rotateRight)
         {
-            transform.Rotate(Vector3.back * RotateSpeed * Time.fixedDeltaTime);
+            GetComponent<Rigidbody2D>().freezeRotation = false;
+            GetComponent<Rigidbody2D>().AddTorque(-RotateSpeed * Time.fixedDeltaTime, ForceMode2D.Impulse);
+        } else
+        {
+            GetComponent<Rigidbody2D>().freezeRotation = true;
         }
     }
 }
