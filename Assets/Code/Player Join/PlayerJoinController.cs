@@ -7,9 +7,20 @@ using System.Linq;
 
 public class PlayerJoinController : MonoBehaviour
 {
-    public Animator StartGameAnimator;
+    public Animator StartGameAnimator, PlayerPanelsAnimator;
+    public CanvasGroup JoinCanvas, LevelSelectCanvas;
+    public Animator[] SinglePlayerPanels;
 
     private int gamePlayerIdCounter = 0;
+
+    private void Start()
+    {
+        JoinCanvas.alpha = 1;
+        JoinCanvas.interactable = true;
+
+        LevelSelectCanvas.alpha = 0;
+        LevelSelectCanvas.interactable = false;
+    }
 
     void Update()
     {
@@ -38,7 +49,12 @@ public class PlayerJoinController : MonoBehaviour
             {
                 if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter"))
                 {
-                    GameObject.FindGameObjectWithTag("Overall Controller").GetComponent<LevelLoader>().LoadLevel(SceneManager.GetActiveScene().buildIndex + 1);
+                    foreach(Animator anim in SinglePlayerPanels)
+                    {
+                        anim.SetBool("IsOnPlayerScreen", false);
+                    }
+                    PlayerPanelsAnimator.SetBool("IsOnPlayerScreen", false);
+                    //Animate levels in
                 }
             }
         }
