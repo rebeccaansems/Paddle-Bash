@@ -20,6 +20,8 @@ public class PlayerJoinController : MonoBehaviour
 
         LevelSelectCanvas.alpha = 0;
         LevelSelectCanvas.interactable = false;
+
+        this.GetComponent<LevelSelectContoller>().enabled = false;
     }
 
     void Update()
@@ -54,7 +56,11 @@ public class PlayerJoinController : MonoBehaviour
                         anim.SetBool("IsOnPlayerScreen", false);
                     }
                     PlayerPanelsAnimator.SetBool("IsOnPlayerScreen", false);
-                    //Animate levels in
+                    
+                    LevelSelectCanvas.alpha = 1;
+                    LevelSelectCanvas.interactable = true;
+
+                    this.GetComponent<LevelSelectContoller>().enabled = true;
                 }
             }
         }
