@@ -37,11 +37,6 @@ public class PaddleMovement : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-       // transform.rotation = Quaternion.Euler(transform.rotation.x, 0, transform.rotation.y);
-    }
-
     private void FixedUpdate()
     {
         GetInput();
@@ -52,6 +47,10 @@ public class PaddleMovement : MonoBehaviour
     {
         moveVector.x = player.GetAxis("Horizontal");
         moveVector.y = player.GetAxis("Vertical");
+
+#if UNITY_EDITOR || UNITY_WINDOWS
+        moveVector.y = moveVector.y * -1;
+#endif
 
         rotateLeft = player.GetButton("Rotate Left");
         rotateRight = player.GetButton("Rotate Right");
@@ -70,7 +69,8 @@ public class PaddleMovement : MonoBehaviour
         {
             GetComponent<Rigidbody2D>().freezeRotation = false;
             GetComponent<Rigidbody2D>().AddTorque(-RotateSpeed * Time.fixedDeltaTime, ForceMode2D.Impulse);
-        } else
+        }
+        else
         {
             GetComponent<Rigidbody2D>().freezeRotation = true;
         }
