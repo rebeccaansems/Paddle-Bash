@@ -12,6 +12,7 @@ public class PlayerJoinController : MonoBehaviour
     public Animator[] SinglePlayerPanels;
 
     private int gamePlayerIdCounter = 0;
+    private Animator levelSelectAnimator;
 
     private void Start()
     {
@@ -22,6 +23,7 @@ public class PlayerJoinController : MonoBehaviour
         LevelSelectCanvas.interactable = false;
 
         this.GetComponent<LevelSelectContoller>().enabled = false;
+        levelSelectAnimator = LevelSelectCanvas.GetComponentsInChildren<Animator>()[0];
     }
 
     void Update()
@@ -51,16 +53,20 @@ public class PlayerJoinController : MonoBehaviour
             {
                 if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter"))
                 {
-                    foreach(Animator anim in SinglePlayerPanels)
+                    foreach (Animator anim in SinglePlayerPanels)
                     {
                         anim.SetBool("IsOnPlayerScreen", false);
                     }
                     PlayerPanelsAnimator.SetBool("IsOnPlayerScreen", false);
-                    
-                    LevelSelectCanvas.alpha = 1;
-                    LevelSelectCanvas.interactable = true;
 
-                    this.GetComponent<LevelSelectContoller>().enabled = true;
+                    if (levelSelectAnimator.GetBool("isOnLevelSelectScreen") == false)
+                    {
+                        LevelSelectCanvas.alpha = 1;
+                        LevelSelectCanvas.interactable = true;
+
+                        this.GetComponent<LevelSelectContoller>().enabled = true;
+                        levelSelectAnimator.SetBool("isOnLevelSelectScreen", true);
+                    }
                 }
             }
         }
