@@ -11,8 +11,9 @@ public class PlayerJoinController : MonoBehaviour
     public CanvasGroup JoinCanvas, LevelSelectCanvas;
     public Animator[] SinglePlayerPanels;
 
-    private int gamePlayerIdCounter = 0;
     private Animator levelSelectAnimator;
+
+    private int gamePlayerIdCounter = 0;
 
     private void Start()
     {
@@ -28,47 +29,60 @@ public class PlayerJoinController : MonoBehaviour
 
     void Update()
     {
-        for (int i = 0; i < ReInput.players.allPlayerCount - 1; i++)
+        if (!GameData.k_InputBlocked)
         {
-            if (ReInput.players.GetPlayer(i).GetButtonDown("Enter") && !GameData.k_RawRewiredPlayerIds.Contains(ReInput.players.GetPlayer(i).id))
+            for (int i = 0; i < ReInput.players.allPlayerCount - 1; i++)
             {
-                GameData.k_Players[System.Array.IndexOf(GameData.k_Players, null)] = new PlayerData(ReInput.players.GetPlayer(i).id, gamePlayerIdCounter);
-                GameData.k_RawRewiredPlayerIds.Add(ReInput.players.GetPlayer(i).id);
-                gamePlayerIdCounter++;
-            }
-        }
-
-        int readyPlayers = GameData.k_Players.Where(x => x != null && x.PanelData != null && x.PanelData.PlayerLocked == true).Count();
-        if (readyPlayers > 1 && StartGameAnimator.GetBool("GameCanStart") == false)
-        {
-            StartGameAnimator.SetBool("GameCanStart", true);
-        }
-        else if (readyPlayers <= 1 && StartGameAnimator.GetBool("GameCanStart") == true)
-        {
-            StartGameAnimator.SetBool("GameCanStart", false);
-        }
-        else if (readyPlayers > 1 && StartGameAnimator.GetBool("GameCanStart") == true)
-        {
-            foreach (PlayerData player in GameData.GetNonNullPlayers().Where(x => x.PanelData.PlayerLocked == true))
-            {
-                if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter"))
+                if (ReInput.players.GetPlayer(i).GetButtonDown("Enter") && !GameData.k_RawRewiredPlayerIds.Contains(ReInput.players.GetPlayer(i).id))
                 {
-                    foreach (Animator anim in SinglePlayerPanels)
-                    {
-                        anim.SetBool("IsOnPlayerScreen", false);
-                    }
-                    PlayerPanelsAnimator.SetBool("IsOnPlayerScreen", false);
+                    GameData.k_Players[System.Array.IndexOf(GameData.k_Players, null)] = new PlayerData(ReInput.players.GetPlayer(i).id, gamePlayerIdCounter);
+                    GameData.k_RawRewiredPlayerIds.Add(ReInput.players.GetPlayer(i).id);
+                    gamePlayerIdCounter++;
+                }
+            }
 
-                    if (levelSelectAnimator.GetBool("isOnLevelSelectScreen") == false)
+            int readyPlayers = GameData.k_Players.Where(x => x != null && x.PanelData != null && x.PanelData.PlayerLocked == true).Count();
+            if (readyPlayers > 1 && StartGameAnimator.GetBool("GameCanStart") == false)
+            {
+                StartGameAnimator.SetBool("GameCanStart", true);
+            }
+            else if (readyPlayers <= 1 && StartGameAnimator.GetBool("GameCanStart") == true)
+            {
+                StartGameAnimator.SetBool("GameCanStart", false);
+            }
+            else if (readyPlayers > 1 && StartGameAnimator.GetBool("GameCanStart") == true)
+            {
+                foreach (PlayerData player in GameData.GetNonNullPlayers().Where(x => x.PanelData.PlayerLocked == true))
+                {
+                    if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter"))
                     {
-                        LevelSelectCanvas.alpha = 1;
-                        LevelSelectCanvas.interactable = true;
+                        foreach (Animator anim in SinglePlayerPanels)
+                        {
+                            anim.SetBool("IsOnPlayerScreen", false);
+                        }
+                        PlayerPanelsAnimator.SetBool("IsOnPlayerScreen", false);
+                        StartCoroutine(DisableInput());
 
-                        this.GetComponent<LevelSelectContoller>().enabled = true;
-                        levelSelectAnimator.SetBool("isOnLevelSelectScreen", true);
+                        if (levelSelectAnimator.GetBool("isOnLevelSelectScreen") == false)
+                        {
+                            LevelSelectCanvas.alpha = 1;
+                            LevelSelectCanvas.interactable = true;
+
+                            this.GetComponent<LevelSelectContoller>().enabled = true;
+                            levelSelectAnimator.SetBool("isOnLevelSelectScreen", true);
+
+                            StartGameAnimator.SetBool("GameCanStart", false);
+                        }
                     }
                 }
             }
         }
+    }
+
+    IEnumerator DisableInput()
+    {
+        GameData.k_InputBlocked = true;
+        yield return new WaitForSeconds(2);
+        GameData.k_InputBlocked = false;
     }
 }
