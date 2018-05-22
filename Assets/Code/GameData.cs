@@ -8,6 +8,7 @@ public class GameData : MonoBehaviour
 {
     public static PlayerData[] k_Players;
     public static List<int> k_RawRewiredPlayerIds;
+    public static int k_CurrentLevel;
 
     void Start()
     {
