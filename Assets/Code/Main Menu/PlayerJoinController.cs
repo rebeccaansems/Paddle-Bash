@@ -82,7 +82,7 @@ public class PlayerJoinController : MonoBehaviour
     IEnumerator DisableInput()
     {
         GameData.k_InputBlocked = true;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.7f);
         GameData.k_InputBlocked = false;
     }
 }
