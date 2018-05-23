@@ -1,7 +1,6 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Rewired;
 using System.Linq;
 
@@ -29,6 +28,11 @@ public class PlayerJoinController : MonoBehaviour
 
     void Update()
     {
+        if (GameData.k_CurrentMenuScreen != GameData.MenuScreens.PlayerJoin)
+        {
+            GameData.k_CurrentMenuScreen = GameData.MenuScreens.PlayerJoin;
+        }
+
         for (int i = 0; i < ReInput.players.allPlayerCount - 1; i++)
         {
             if (ReInput.players.GetPlayer(i).GetButtonDown("Enter") && !GameData.k_RawRewiredPlayerIds.Contains(ReInput.players.GetPlayer(i).id))
@@ -55,7 +59,7 @@ public class PlayerJoinController : MonoBehaviour
         {
             foreach (PlayerData player in GameData.GetNonNullPlayers().Where(x => x.PanelData.PlayerLocked == true))
             {
-                if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && !GameData.k_InputBlocked 
+                if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && !GameData.k_InputBlocked
                     && levelSelectAnimator.GetBool("isOnLevelSelectScreen") == false && GameData.k_ReadyPlayersJoined == 2)
                 {
                     foreach (Animator anim in SinglePlayerPanels)
@@ -82,7 +86,7 @@ public class PlayerJoinController : MonoBehaviour
     IEnumerator DisableInput()
     {
         GameData.k_InputBlocked = true;
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(1);
         GameData.k_InputBlocked = false;
     }
 }

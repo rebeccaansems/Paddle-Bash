@@ -3,7 +3,6 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class LevelSelectContoller : MonoBehaviour
 {
@@ -26,6 +25,11 @@ public class LevelSelectContoller : MonoBehaviour
 
     public void Update()
     {
+        if (GameData.k_CurrentMenuScreen != GameData.MenuScreens.LevelSelect)
+        {
+            GameData.k_CurrentMenuScreen = GameData.MenuScreens.LevelSelect;
+        }
+
         ContinueAnimator.SetBool("GameCanStart", !GameData.k_InputBlocked && LevelSelectAnimator.GetBool("isOnLevelSelectScreen"));
 
         foreach (PlayerData player in GameData.GetNonNullPlayers().Where(x => x.PanelData.PlayerLocked == true))
