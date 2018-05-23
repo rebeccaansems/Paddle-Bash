@@ -26,44 +26,43 @@ public class LevelSelectContoller : MonoBehaviour
 
     public void Update()
     {
-        if (!GameData.k_InputBlocked)
+        foreach (PlayerData player in GameData.GetNonNullPlayers().Where(x => x.PanelData.PlayerLocked == true))
         {
-            foreach (PlayerData player in GameData.GetNonNullPlayers().Where(x => x.PanelData.PlayerLocked == true))
+            if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && !GameData.k_InputBlocked)
             {
-                if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter"))
+                overallController.GetComponent<LevelLoader>().LoadLevel(GameplayLevels[GameData.k_CurrentLevel]);
+            }
+            else if (LevelSelectAnimator.GetBool("isOnLevelSelectScreen") == true)
+            {
+                if (ReInput.players.GetPlayer(player.GamePlayerId).GetButtonDown("Back") && !GameData.k_InputBlocked)
                 {
-                    overallController.GetComponent<LevelLoader>().LoadLevel(GameplayLevels[GameData.k_CurrentLevel]);
+                    this.GetComponent<LevelSelectContoller>().enabled = false;
+
+                    LevelSelectAnimator.SetBool("isOnLevelSelectScreen", false);
+                    PlayerPanelsAnimator.SetBool("IsOnPlayerScreen", true);
+
+                    foreach (Animator anim in SinglePlayerPanels)
+                    {
+                        anim.SetBool("IsOnPlayerScreen", true);
+                        anim.SetBool("PlayerLockedIn", true);
+                    }
                     StartCoroutine(DisableInput());
                 }
-                else if (LevelSelectAnimator.GetBool("isOnLevelSelectScreen") == true)
-                    if (ReInput.players.GetPlayer(player.GamePlayerId).GetButtonDown("Back"))
-                    {
-                        this.GetComponent<LevelSelectContoller>().enabled = false;
-
-                        LevelSelectAnimator.SetBool("isOnLevelSelectScreen", false);
-                        PlayerPanelsAnimator.SetBool("IsOnPlayerScreen", true);
-
-                        foreach (Animator anim in SinglePlayerPanels)
-                        {
-                            anim.SetBool("IsOnPlayerScreen", true);
-                            anim.SetBool("PlayerLockedIn", true);
-                        }
-                        StartCoroutine(DisableInput());
-                    }
-                    else if (ReInput.players.GetPlayer(player.GamePlayerId).GetAxis("Horizontal Menu") > 0 && CurrentLevelAnimator.GetBool("newLevel") == false)
-                    {
-                        PlayerPanelsAnimator.SetBool("IsOnPlayerScreen", false);
-                        CurrentLevelAnimator.SetBool("newLevel", true);
-                        StartCoroutine(FinishLevelChangeAnimation(1));
-                    }
-                    else if (ReInput.players.GetPlayer(player.GamePlayerId).GetAxis("Horizontal Menu") < 0 && CurrentLevelAnimator.GetBool("newLevel") == false)
-                    {
-                        PlayerPanelsAnimator.SetBool("IsOnPlayerScreen", false);
-                        CurrentLevelAnimator.SetBool("newLevel", true);
-                        StartCoroutine(FinishLevelChangeAnimation(-1));
-                    }
+                else if (ReInput.players.GetPlayer(player.GamePlayerId).GetAxis("Horizontal Menu") > 0 && CurrentLevelAnimator.GetBool("newLevel") == false)
+                {
+                    PlayerPanelsAnimator.SetBool("IsOnPlayerScreen", false);
+                    CurrentLevelAnimator.SetBool("newLevel", true);
+                    StartCoroutine(FinishLevelChangeAnimation(1));
+                }
+                else if (ReInput.players.GetPlayer(player.GamePlayerId).GetAxis("Horizontal Menu") < 0 && CurrentLevelAnimator.GetBool("newLevel") == false)
+                {
+                    PlayerPanelsAnimator.SetBool("IsOnPlayerScreen", false);
+                    CurrentLevelAnimator.SetBool("newLevel", true);
+                    StartCoroutine(FinishLevelChangeAnimation(-1));
+                }
             }
         }
+
     }
 
 
@@ -92,7 +91,7 @@ public class LevelSelectContoller : MonoBehaviour
     IEnumerator DisableInput()
     {
         GameData.k_InputBlocked = true;
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(3);
         GameData.k_InputBlocked = false;
     }
 }
