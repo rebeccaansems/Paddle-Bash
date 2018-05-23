@@ -1,18 +1,18 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Rewired;
 using System.Linq;
 
 public class PlayerJoinController : MonoBehaviour
 {
-    public Animator StartGameAnimator, PlayerPanelsAnimator;
+    public Animator ContinueAnimator, PlayerPanelsAnimator;
     public CanvasGroup JoinCanvas, LevelSelectCanvas;
     public Animator[] SinglePlayerPanels;
 
-    private int gamePlayerIdCounter = 0;
     private Animator levelSelectAnimator;
+
+    private int gamePlayerIdCounter = 0;
 
     private void Start()
     {
@@ -28,6 +28,11 @@ public class PlayerJoinController : MonoBehaviour
 
     void Update()
     {
+        if (GameData.k_CurrentMenuScreen != GameData.MenuScreens.PlayerJoin)
+        {
+            GameData.k_CurrentMenuScreen = GameData.MenuScreens.PlayerJoin;
+        }
+
         for (int i = 0; i < ReInput.players.allPlayerCount - 1; i++)
         {
             if (ReInput.players.GetPlayer(i).GetButtonDown("Enter") && !GameData.k_RawRewiredPlayerIds.Contains(ReInput.players.GetPlayer(i).id))
@@ -39,36 +44,49 @@ public class PlayerJoinController : MonoBehaviour
         }
 
         int readyPlayers = GameData.k_Players.Where(x => x != null && x.PanelData != null && x.PanelData.PlayerLocked == true).Count();
-        if (readyPlayers > 1 && StartGameAnimator.GetBool("GameCanStart") == false)
+        if (readyPlayers > 1 && !ContinueAnimator.GetBool("GameCanStart"))
         {
-            StartGameAnimator.SetBool("GameCanStart", true);
+            if (levelSelectAnimator.GetBool("isOnLevelSelectScreen") == false && !GameData.k_InputBlocked)
+            {
+                ContinueAnimator.SetBool("GameCanStart", true);
+            }
         }
-        else if (readyPlayers <= 1 && StartGameAnimator.GetBool("GameCanStart") == true)
+        else if (readyPlayers <= 1 && ContinueAnimator.GetBool("GameCanStart"))
         {
-            StartGameAnimator.SetBool("GameCanStart", false);
+            ContinueAnimator.SetBool("GameCanStart", false);
         }
-        else if (readyPlayers > 1 && StartGameAnimator.GetBool("GameCanStart") == true)
+        else if (readyPlayers > 1 && ContinueAnimator.GetBool("GameCanStart"))
         {
             foreach (PlayerData player in GameData.GetNonNullPlayers().Where(x => x.PanelData.PlayerLocked == true))
             {
-                if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter"))
+                if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && !GameData.k_InputBlocked
+                    && levelSelectAnimator.GetBool("isOnLevelSelectScreen") == false && GameData.k_ReadyPlayersJoined == 2)
                 {
                     foreach (Animator anim in SinglePlayerPanels)
                     {
                         anim.SetBool("IsOnPlayerScreen", false);
                     }
                     PlayerPanelsAnimator.SetBool("IsOnPlayerScreen", false);
+                    ContinueAnimator.SetBool("GameCanStart", false);
 
-                    if (levelSelectAnimator.GetBool("isOnLevelSelectScreen") == false)
-                    {
-                        LevelSelectCanvas.alpha = 1;
-                        LevelSelectCanvas.interactable = true;
+                    StartCoroutine(DisableInput());
 
-                        this.GetComponent<LevelSelectContoller>().enabled = true;
-                        levelSelectAnimator.SetBool("isOnLevelSelectScreen", true);
-                    }
+                    LevelSelectCanvas.alpha = 1;
+                    LevelSelectCanvas.interactable = true;
+
+                    this.GetComponent<PlayerJoinController>().enabled = false;
+                    this.GetComponent<LevelSelectContoller>().enabled = true;
+                    levelSelectAnimator.SetBool("isOnLevelSelectScreen", true);
                 }
             }
         }
+    }
+
+
+    IEnumerator DisableInput()
+    {
+        GameData.k_InputBlocked = true;
+        yield return new WaitForSeconds(1);
+        GameData.k_InputBlocked = false;
     }
 }
