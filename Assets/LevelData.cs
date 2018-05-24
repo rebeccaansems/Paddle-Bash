@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [System.Serializable]
@@ -12,4 +9,5 @@ public class LevelData : ScriptableObject {
     public Scene Scene;
     public Color LevelColor;
     public AudioClip[] BackgroundMusic;
+
 }
