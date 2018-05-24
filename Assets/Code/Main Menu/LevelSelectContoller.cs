@@ -15,11 +15,8 @@ public class LevelSelectContoller : MonoBehaviour
 
     public Text CurrentLevelText;
 
-    private GameObject overallController;
-
     private void Start()
     {
-        overallController = GameObject.FindGameObjectWithTag("Overall Controller");
         var levelObj = Resources.LoadAll("LevelData", typeof(LevelData)).ToArray();
         levelData = Array.ConvertAll(levelObj, item => item as LevelData);
     }
@@ -37,7 +34,13 @@ public class LevelSelectContoller : MonoBehaviour
         {
             if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && !GameData.k_InputBlocked)
             {
-                overallController.GetComponent<LevelLoader>().LoadLevel(levelData[GameData.k_CurrentLevel].SceneNumber);
+                this.GetComponent<LevelSelectContoller>().enabled = false;
+                this.GetComponent<EditLevelController>().enabled = true;
+
+                ContinueAnimator.SetBool("GameCanStart", false);
+                LevelSelectAnimator.SetBool("isOnLevelSelectScreen", false);
+
+                StartCoroutine(DisableInput());
             }
             else if (LevelSelectAnimator.GetBool("isOnLevelSelectScreen") == true)
             {

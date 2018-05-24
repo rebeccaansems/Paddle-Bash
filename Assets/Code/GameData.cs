@@ -15,7 +15,8 @@ public class GameData : MonoBehaviour
     public enum MenuScreens
     {
         PlayerJoin,
-        LevelSelect
+        LevelSelect,
+        EditLevel
     }
 
     void Start()
