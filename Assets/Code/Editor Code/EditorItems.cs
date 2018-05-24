@@ -23,16 +23,16 @@ public class EditorItems
     [MenuItem("Tools/Create Scene Data Objects")]
     public static void CreateAsset()
     {
-        int count = Directory.GetFiles("Assets/Scene/Data",
+        string assetPath = "Assets/Resources/LevelData";
+        string fileName = "/LevelData.asset";
+
+        int count = Directory.GetFiles(assetPath,
             "*.asset", SearchOption.AllDirectories).Length + 1;
 
         LevelData asset = ScriptableObject.CreateInstance<LevelData>();
-        string assetPath = "Assets/Scene/Data/LevelData.asset";
 
-        AssetDatabase.CreateAsset(asset, assetPath);
-        AssetDatabase.SaveAssets();
-        
-        AssetDatabase.RenameAsset(assetPath, "LevelData" + count + ".asset");
+        AssetDatabase.CreateAsset(asset, assetPath + fileName);
+        AssetDatabase.RenameAsset(assetPath + fileName, "LevelData" + count + ".asset");
         AssetDatabase.SaveAssets();
 
         Debug.Log("ASSET " + count + " CREATED SUCCESSFUL");

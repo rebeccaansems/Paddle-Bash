@@ -1,4 +1,5 @@
 ﻿using Rewired;
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -10,7 +11,7 @@ public class LevelSelectContoller : MonoBehaviour
     public Animator[] SinglePlayerPanels;
 
     public Image CurrentLevel;
-    public LevelData[] LevelData;
+    private LevelData[] levelData;
 
     public Text CurrentLevelText;
 
@@ -19,6 +20,8 @@ public class LevelSelectContoller : MonoBehaviour
     private void Start()
     {
         overallController = GameObject.FindGameObjectWithTag("Overall Controller");
+        var levelObj = Resources.LoadAll("LevelData", typeof(LevelData)).ToArray();
+        levelData = Array.ConvertAll(levelObj, item => item as LevelData);
     }
 
     public void Update()
@@ -34,7 +37,7 @@ public class LevelSelectContoller : MonoBehaviour
         {
             if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && !GameData.k_InputBlocked)
             {
-                overallController.GetComponent<LevelLoader>().LoadLevel(LevelData[GameData.k_CurrentLevel].SceneNumber);
+                overallController.GetComponent<LevelLoader>().LoadLevel(levelData[GameData.k_CurrentLevel].SceneNumber);
             }
             else if (LevelSelectAnimator.GetBool("isOnLevelSelectScreen") == true)
             {
@@ -78,15 +81,15 @@ public class LevelSelectContoller : MonoBehaviour
         GameData.k_CurrentLevel += change;
         if (GameData.k_CurrentLevel < 0)
         {
-            GameData.k_CurrentLevel = LevelData.Length - 1;
+            GameData.k_CurrentLevel = levelData.Length - 1;
         }
-        else if (GameData.k_CurrentLevel == LevelData.Length)
+        else if (GameData.k_CurrentLevel == levelData.Length)
         {
             GameData.k_CurrentLevel = 0;
         }
 
-        CurrentLevel.sprite = LevelData[GameData.k_CurrentLevel].LevelArt;
-        CurrentLevelText.text = LevelData[GameData.k_CurrentLevel].LevelName;
+        CurrentLevel.sprite = levelData[GameData.k_CurrentLevel].LevelArt;
+        CurrentLevelText.text = levelData[GameData.k_CurrentLevel].LevelName;
 
         yield return new WaitForSeconds(0.5f);
 
