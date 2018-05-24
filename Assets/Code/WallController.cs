@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class WallController : MonoBehaviour
 {
-
-    public MeshRenderer[] AllWalls;
+    public GameObject ParentWall;
     public LevelData LevelData;
 
     void Start()
     {
-        foreach (MeshRenderer mesh in AllWalls)
+        foreach (MeshRenderer mesh in ParentWall.GetComponentsInChildren<MeshRenderer>())
         {
             mesh.materials[0].SetColor("_EmissionColor", LevelData.LevelColor);
         }
