@@ -6,13 +6,11 @@ using UnityEngine.UI;
 
 public class LevelSelectContoller : MonoBehaviour
 {
-    public int[] GameplayLevels;
-
     public Animator LevelSelectAnimator, PlayerPanelsAnimator, CurrentLevelAnimator, ContinueAnimator;
     public Animator[] SinglePlayerPanels;
 
     public Image CurrentLevel;
-    public Sprite[] GameplayLevelsArt;
+    public LevelData[] LevelData;
 
     public Text CurrentLevelText;
 
@@ -36,7 +34,7 @@ public class LevelSelectContoller : MonoBehaviour
         {
             if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && !GameData.k_InputBlocked)
             {
-                overallController.GetComponent<LevelLoader>().LoadLevel(GameplayLevels[GameData.k_CurrentLevel]);
+                overallController.GetComponent<LevelLoader>().LoadLevel(LevelData[GameData.k_CurrentLevel].SceneNumber);
             }
             else if (LevelSelectAnimator.GetBool("isOnLevelSelectScreen") == true)
             {
@@ -80,15 +78,15 @@ public class LevelSelectContoller : MonoBehaviour
         GameData.k_CurrentLevel += change;
         if (GameData.k_CurrentLevel < 0)
         {
-            GameData.k_CurrentLevel = GameplayLevels.Length - 1;
+            GameData.k_CurrentLevel = LevelData.Length - 1;
         }
-        else if (GameData.k_CurrentLevel == GameplayLevels.Length)
+        else if (GameData.k_CurrentLevel == LevelData.Length)
         {
             GameData.k_CurrentLevel = 0;
         }
 
-        CurrentLevel.sprite = GameplayLevelsArt[GameData.k_CurrentLevel];
-        CurrentLevelText.text = "LEVEL " + (GameData.k_CurrentLevel + 1).ToString("00");
+        CurrentLevel.sprite = LevelData[GameData.k_CurrentLevel].LevelArt;
+        CurrentLevelText.text = LevelData[GameData.k_CurrentLevel].LevelName;
 
         yield return new WaitForSeconds(0.5f);
 

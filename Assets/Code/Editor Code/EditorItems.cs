@@ -24,7 +24,7 @@ public class EditorItems
     public static void CreateAsset()
     {
         int count = Directory.GetFiles("Assets/Scene/Data",
-            "*.asset", SearchOption.AllDirectories).Length;
+            "*.asset", SearchOption.AllDirectories).Length + 1;
 
         LevelData asset = ScriptableObject.CreateInstance<LevelData>();
         string assetPath = "Assets/Scene/Data/LevelData.asset";
