@@ -4,5 +4,22 @@ using UnityEngine;
 
 public class GameData : MonoBehaviour {
 
-    public int NumberRounds, TimeLimit, ScoreLimit, NumberLives, Speed;
+    public int NumberRounds, TimeLimit, ScoreLimit, NumberLives;
+    public float Speed;
+
+    private List<float> allSpeeds = new List<float> { 0.25f, 0.5f, 1f, 1.5f, 2f };
+
+    public void SetToDefaults()
+    {
+        NumberRounds = 5;
+        TimeLimit = 180;
+        ScoreLimit = 5;
+        NumberLives = -1;
+        Speed = 1;
+    }
+
+    public void SetSpeed(int index)
+    {
+        Speed = allSpeeds[index];
+    }
 }

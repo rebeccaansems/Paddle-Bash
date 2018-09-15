@@ -29,38 +29,38 @@ public class EditableGameData : MonoBehaviour
 
         AllValuesRounds.AddRange(new List<Tuple<string, int>>
         {
-            new Tuple<string, int>("1", 0),
-            new Tuple<string, int>("3", 1),
-            new Tuple<string, int>("5", 2),
-            new Tuple<string, int>("10", 3),
-            new Tuple<string, int>("UNLIMITED", 4),
+            new Tuple<string, int>("1", 1),
+            new Tuple<string, int>("3", 3),
+            new Tuple<string, int>("5", 5),
+            new Tuple<string, int>("10", 10),
+            new Tuple<string, int>("UNLIMITED", -1),
         });
 
         AllValuesTimeLimit.AddRange(new List<Tuple<string, int>>
         {
-            new Tuple<string, int>("30s", 0),
-            new Tuple<string, int>("60s", 1),
-            new Tuple<string, int>("180s", 2),
-            new Tuple<string, int>("300s", 3),
-            new Tuple<string, int>("UNLIMITED", 4),
+            new Tuple<string, int>("30s", 30),
+            new Tuple<string, int>("60s", 60),
+            new Tuple<string, int>("180s", 180),
+            new Tuple<string, int>("300s", 300),
+            new Tuple<string, int>("UNLIMITED", -1),
         });
 
         AllValuesScoreLimit.AddRange(new List<Tuple<string, int>>
         {
-            new Tuple<string, int>("1", 0),
-            new Tuple<string, int>("3", 1),
-            new Tuple<string, int>("5", 2),
-            new Tuple<string, int>("10", 3),
-            new Tuple<string, int>("UNLIMITED", 4),
+            new Tuple<string, int>("1", 1),
+            new Tuple<string, int>("3", 3),
+            new Tuple<string, int>("5", 5),
+            new Tuple<string, int>("10", 10),
+            new Tuple<string, int>("UNLIMITED", -1),
         });
 
         AllValuesLives.AddRange(new List<Tuple<string, int>>
         {
-            new Tuple<string, int>("1", 0),
-            new Tuple<string, int>("3", 1),
-            new Tuple<string, int>("5", 2),
-            new Tuple<string, int>("10", 3),
-            new Tuple<string, int>("UNLIMITED", 4),
+            new Tuple<string, int>("1", 1),
+            new Tuple<string, int>("3", 3),
+            new Tuple<string, int>("5", 5),
+            new Tuple<string, int>("10", 10),
+            new Tuple<string, int>("UNLIMITED", -1),
         });
 
         AllValuesSpeed.AddRange(new List<Tuple<string, int>>

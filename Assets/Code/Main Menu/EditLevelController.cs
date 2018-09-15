@@ -17,8 +17,9 @@ public class EditLevelController : MonoBehaviour
 
     private void Start()
     {
+        overallController.GetComponent<GameData>().SetToDefaults();
         canUpdateEditable = true;
-        currentEditableValues = new int[] {2, 2, 2, 4, 2 };
+        currentEditableValues = new int[] { 2, 2, 2, 4, 2 };
 
         overallController = GameObject.FindGameObjectWithTag("Overall Controller");
         HighLightEditableItem(true, AllEditableValues[currentEditableItem]);
@@ -35,18 +36,11 @@ public class EditLevelController : MonoBehaviour
         {
             if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && !SessionData.k_InputBlocked)
             {
-                //LevelSelectAnimator.SetBool("isOnLevelSelectScreen", false);
-                //ContinueAnimator.SetBool("GameCanStart", false);
-
-                //StartCoroutine(DisableInput());
-
-                //EditLevelCanvas.alpha = 1;
-                //EditLevelCanvas.interactable = true;
-
-                //this.GetComponent<LevelSelectContoller>().enabled = false;
-                //this.GetComponent<EditLevelController>().enabled = true;
-
-                //EditLevelAnimator.SetBool("isOnEditLevelScreen", true);
+                overallController.GetComponent<GameData>().NumberRounds = EditableData.AllEditableData[0][currentEditableValues[0]].Second;
+                overallController.GetComponent<GameData>().TimeLimit = EditableData.AllEditableData[1][currentEditableValues[1]].Second;
+                overallController.GetComponent<GameData>().ScoreLimit = EditableData.AllEditableData[2][currentEditableValues[2]].Second;
+                overallController.GetComponent<GameData>().NumberLives = EditableData.AllEditableData[3][currentEditableValues[3]].Second;
+                overallController.GetComponent<GameData>().SetSpeed(EditableData.AllEditableData[4][currentEditableValues[4]].Second);
             }
             else if (Mathf.Abs(ReInput.players.GetPlayer(player.GamePlayerId).GetAxis("Vertical Menu")) > 0.5f && canUpdateEditable)
             {
@@ -148,7 +142,7 @@ public class EditLevelController : MonoBehaviour
             currentEditableValues[currentEditableItem] = 0;
         }
 
-        AllEditableValues[currentEditableItem].GetComponentsInChildren<Text>()[1].text = 
+        AllEditableValues[currentEditableItem].GetComponentsInChildren<Text>()[1].text =
             EditableData.AllEditableData[currentEditableItem][currentEditableValues[currentEditableItem]].First;
     }
 
