@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
+    public int[] AllGameplayLevels;
+
     public void LoadLevel(string name)
     {
         LoadLevel(SceneManager.GetSceneByName(name).buildIndex);

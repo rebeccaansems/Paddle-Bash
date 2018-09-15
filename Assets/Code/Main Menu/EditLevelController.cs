@@ -9,6 +9,7 @@ public class EditLevelController : MonoBehaviour
 {
     public GameObject[] AllEditableValues;
     public EditableGameData EditableData;
+    public Animator ContinueAnimator;
 
     private GameObject overallController;
     private int[] currentEditableValues;
@@ -17,12 +18,12 @@ public class EditLevelController : MonoBehaviour
 
     private void Start()
     {
-        overallController.GetComponent<GameData>().SetToDefaults();
         canUpdateEditable = true;
         currentEditableValues = new int[] { 2, 2, 2, 4, 2 };
 
         overallController = GameObject.FindGameObjectWithTag("Overall Controller");
         HighLightEditableItem(true, AllEditableValues[currentEditableItem]);
+        overallController.GetComponent<GameData>().SetToDefaults();
     }
 
     void Update()
@@ -32,15 +33,18 @@ public class EditLevelController : MonoBehaviour
             SessionData.k_CurrentMenuScreen = SessionData.MenuScreens.EditLevel;
         }
 
+        ContinueAnimator.SetBool("GameCanStart", currentEditableItem == EditableData.AllEditableData.Count);
+
         foreach (PlayerData player in SessionData.GetNonNullPlayers().Where(x => x.PanelData.PlayerLocked == true))
         {
-            if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && !SessionData.k_InputBlocked)
+            if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && currentEditableItem == EditableData.AllEditableData.Count && !SessionData.k_InputBlocked)
             {
                 overallController.GetComponent<GameData>().NumberRounds = EditableData.AllEditableData[0][currentEditableValues[0]].Second;
                 overallController.GetComponent<GameData>().TimeLimit = EditableData.AllEditableData[1][currentEditableValues[1]].Second;
                 overallController.GetComponent<GameData>().ScoreLimit = EditableData.AllEditableData[2][currentEditableValues[2]].Second;
-                overallController.GetComponent<GameData>().NumberLives = EditableData.AllEditableData[3][currentEditableValues[3]].Second;
-                overallController.GetComponent<GameData>().SetSpeed(EditableData.AllEditableData[4][currentEditableValues[4]].Second);
+                overallController.GetComponent<GameData>().SetSpeed(EditableData.AllEditableData[3][currentEditableValues[3]].Second);
+
+                overallController.GetComponent<LevelLoader>().LoadLevel(SessionData.k_GameplayLevels[SessionData.k_CurrentLevel]);
             }
             else if (Mathf.Abs(ReInput.players.GetPlayer(player.GamePlayerId).GetAxis("Vertical Menu")) > 0.5f && canUpdateEditable)
             {
@@ -133,17 +137,20 @@ public class EditLevelController : MonoBehaviour
 
         currentEditableValues[currentEditableItem] += (int)change;
 
-        if (currentEditableValues[currentEditableItem] < 0)
+        if (currentEditableItem != EditableData.AllEditableData.Count)
         {
-            currentEditableValues[currentEditableItem] = EditableData.AllEditableData[currentEditableItem].Count - 1;
-        }
-        else if (currentEditableValues[currentEditableItem] == AllEditableValues.Length)
-        {
-            currentEditableValues[currentEditableItem] = 0;
-        }
+            if (currentEditableValues[currentEditableItem] < 0)
+            {
+                currentEditableValues[currentEditableItem] = EditableData.AllEditableData[currentEditableItem].Count - 1;
+            }
+            else if (currentEditableValues[currentEditableItem] == AllEditableValues.Length)
+            {
+                currentEditableValues[currentEditableItem] = 0;
+            }
 
-        AllEditableValues[currentEditableItem].GetComponentsInChildren<Text>()[1].text =
-            EditableData.AllEditableData[currentEditableItem][currentEditableValues[currentEditableItem]].First;
+            AllEditableValues[currentEditableItem].GetComponentsInChildren<Text>()[1].text =
+                EditableData.AllEditableData[currentEditableItem][currentEditableValues[currentEditableItem]].First;
+        }
     }
 
 }

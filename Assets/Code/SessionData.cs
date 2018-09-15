@@ -7,6 +7,7 @@ using System.Linq;
 public class SessionData : MonoBehaviour
 {
     public static PlayerData[] k_Players;
+    public static int[] k_GameplayLevels;
     public static List<int> k_RawRewiredPlayerIds;
     public static int k_CurrentLevel, k_ReadyPlayersJoined;
     public static MenuScreens k_CurrentMenuScreen;

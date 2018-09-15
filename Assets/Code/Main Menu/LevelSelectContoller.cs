@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class LevelSelectContoller : MonoBehaviour
 {
-    public int[] GameplayLevels;
-
     public Animator LevelSelectAnimator, PlayerPanelsAnimator, CurrentLevelAnimator, ContinueAnimator, EditLevelAnimator;
     public CanvasGroup EditLevelCanvas;
     public Animator[] SinglePlayerPanels;
@@ -85,9 +83,9 @@ public class LevelSelectContoller : MonoBehaviour
         SessionData.k_CurrentLevel += change;
         if (SessionData.k_CurrentLevel < 0)
         {
-            SessionData.k_CurrentLevel = GameplayLevels.Length - 1;
+            SessionData.k_CurrentLevel = SessionData.k_GameplayLevels.Length - 1;
         }
-        else if (SessionData.k_CurrentLevel == GameplayLevels.Length)
+        else if (SessionData.k_CurrentLevel == SessionData.k_GameplayLevels.Length)
         {
             SessionData.k_CurrentLevel = 0;
         }
