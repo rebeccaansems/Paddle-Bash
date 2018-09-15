@@ -7,7 +7,7 @@ using System.Linq;
 public class PlayerJoinController : MonoBehaviour
 {
     public Animator ContinueAnimator, PlayerPanelsAnimator;
-    public CanvasGroup JoinCanvas, LevelSelectCanvas;
+    public CanvasGroup JoinCanvas, LevelSelectCanvas, EditLevelCanvas;
     public Animator[] SinglePlayerPanels;
 
     private Animator levelSelectAnimator;
@@ -21,6 +21,9 @@ public class PlayerJoinController : MonoBehaviour
 
         LevelSelectCanvas.alpha = 0;
         LevelSelectCanvas.interactable = false;
+
+        EditLevelCanvas.alpha = 0;
+        EditLevelCanvas.interactable = false;
 
         this.GetComponent<LevelSelectContoller>().enabled = false;
         levelSelectAnimator = LevelSelectCanvas.GetComponentsInChildren<Animator>()[0];

@@ -8,20 +8,14 @@ public class LevelSelectContoller : MonoBehaviour
 {
     public int[] GameplayLevels;
 
-    public Animator LevelSelectAnimator, PlayerPanelsAnimator, CurrentLevelAnimator, ContinueAnimator;
+    public Animator LevelSelectAnimator, PlayerPanelsAnimator, CurrentLevelAnimator, ContinueAnimator, EditLevelAnimator;
+    public CanvasGroup EditLevelCanvas;
     public Animator[] SinglePlayerPanels;
 
     public Image CurrentLevel;
     public Sprite[] GameplayLevelsArt;
 
     public Text CurrentLevelText;
-
-    private GameObject overallController;
-
-    private void Start()
-    {
-        overallController = GameObject.FindGameObjectWithTag("Overall Controller");
-    }
 
     public void Update()
     {
@@ -36,7 +30,18 @@ public class LevelSelectContoller : MonoBehaviour
         {
             if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && !GameData.k_InputBlocked)
             {
-                overallController.GetComponent<LevelLoader>().LoadLevel(GameplayLevels[GameData.k_CurrentLevel]);
+                LevelSelectAnimator.SetBool("isOnLevelSelectScreen", false);
+                ContinueAnimator.SetBool("GameCanStart", false);
+
+                StartCoroutine(DisableInput());
+
+                EditLevelCanvas.alpha = 1;
+                EditLevelCanvas.interactable = true;
+
+                this.GetComponent<LevelSelectContoller>().enabled = false;
+                this.GetComponent<EditLevelController>().enabled = true;
+
+                EditLevelAnimator.SetBool("isOnEditLevelScreen", true);
             }
             else if (LevelSelectAnimator.GetBool("isOnLevelSelectScreen") == true)
             {
