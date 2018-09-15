@@ -26,6 +26,7 @@ public class PlayerJoinController : MonoBehaviour
         EditLevelCanvas.interactable = false;
 
         this.GetComponent<LevelSelectContoller>().enabled = false;
+        this.GetComponent<EditLevelController>().enabled = false;
         levelSelectAnimator = LevelSelectCanvas.GetComponentsInChildren<Animator>()[0];
     }
 
