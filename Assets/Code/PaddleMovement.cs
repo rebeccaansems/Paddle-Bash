@@ -22,13 +22,13 @@ public class PaddleMovement : MonoBehaviour
 
     private void Awake()
     {
-        if (GameData.k_Players[PlayerNum] == null)
+        if (SessionData.k_Players[PlayerNum] == null)
         {
             Destroy(this.gameObject);
         }
         else
         {
-            PlayerData = GameData.k_Players[PlayerNum];
+            PlayerData = SessionData.k_Players[PlayerNum];
             rewiredPlayerId = PlayerData.RewiredPlayerId;
             player = ReInput.players.GetPlayer(rewiredPlayerId);
             player.controllers.maps.SetMapsEnabled(true, "Game");

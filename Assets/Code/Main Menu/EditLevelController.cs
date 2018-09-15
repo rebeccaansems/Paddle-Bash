@@ -8,29 +8,32 @@ using UnityEngine.UI;
 public class EditLevelController : MonoBehaviour
 {
     public GameObject[] AllEditableValues;
+    public EditableGameData EditableData;
 
     private GameObject overallController;
-    private int currentEditable;
+    private int[] currentEditableValues;
+    private int currentEditableItem;
     private bool canUpdateEditable;
 
     private void Start()
     {
         canUpdateEditable = true;
+        currentEditableValues = new int[] {2, 2, 2, 4, 2 };
 
         overallController = GameObject.FindGameObjectWithTag("Overall Controller");
-        HighLightEditableItem(true, AllEditableValues[currentEditable]);
+        HighLightEditableItem(true, AllEditableValues[currentEditableItem]);
     }
 
     void Update()
     {
-        if (GameData.k_CurrentMenuScreen != GameData.MenuScreens.EditLevel)
+        if (SessionData.k_CurrentMenuScreen != SessionData.MenuScreens.EditLevel)
         {
-            GameData.k_CurrentMenuScreen = GameData.MenuScreens.EditLevel;
+            SessionData.k_CurrentMenuScreen = SessionData.MenuScreens.EditLevel;
         }
 
-        foreach (PlayerData player in GameData.GetNonNullPlayers().Where(x => x.PanelData.PlayerLocked == true))
+        foreach (PlayerData player in SessionData.GetNonNullPlayers().Where(x => x.PanelData.PlayerLocked == true))
         {
-            if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && !GameData.k_InputBlocked)
+            if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && !SessionData.k_InputBlocked)
             {
                 //LevelSelectAnimator.SetBool("isOnLevelSelectScreen", false);
                 //ContinueAnimator.SetBool("GameCanStart", false);
@@ -47,51 +50,24 @@ public class EditLevelController : MonoBehaviour
             }
             else if (Mathf.Abs(ReInput.players.GetPlayer(player.GamePlayerId).GetAxis("Vertical Menu")) > 0.5f && canUpdateEditable)
             {
-                StartCoroutine(WaitForEditUpdate(ReInput.players.GetPlayer(player.GamePlayerId)));
-                //else if (LevelSelectAnimator.GetBool("isOnLevelSelectScreen") == true)
-                //{
-                //if (ReInput.players.GetPlayer(player.GamePlayerId).GetButtonDown("Back") && !GameData.k_InputBlocked)
-                //{
-                //    this.GetComponent<LevelSelectContoller>().enabled = false;
-                //    this.GetComponent<PlayerJoinController>().enabled = true;
-
-                //    ContinueAnimator.SetBool("GameCanStart", false);
-                //    LevelSelectAnimator.SetBool("isOnLevelSelectScreen", false);
-                //    PlayerPanelsAnimator.SetBool("IsOnPlayerScreen", true);
-
-                //    foreach (Animator anim in SinglePlayerPanels)
-                //    {
-                //        anim.SetBool("IsOnPlayerScreen", true);
-                //        anim.SetBool("PlayerLockedIn", true);
-                //    }
-                //    StartCoroutine(DisableInput());
-                //}
-                //else if (ReInput.players.GetPlayer(player.GamePlayerId).GetAxis("Horizontal Menu") > 0 && CurrentLevelAnimator.GetBool("newLevel") == false)
-                //{
-                //    PlayerPanelsAnimator.SetBool("IsOnPlayerScreen", false);
-                //    CurrentLevelAnimator.SetBool("newLevel", true);
-                //    StartCoroutine(FinishLevelChangeAnimation(1));
-                //}
-                //else if (ReInput.players.GetPlayer(player.GamePlayerId).GetAxis("Horizontal Menu") < 0 && CurrentLevelAnimator.GetBool("newLevel") == false)
-                //{
-                //    PlayerPanelsAnimator.SetBool("IsOnPlayerScreen", false);
-                //    CurrentLevelAnimator.SetBool("newLevel", true);
-                //    StartCoroutine(FinishLevelChangeAnimation(-1));
-                //}
-                //}
+                StartCoroutine(WaitForSelectedEditableUpdate(ReInput.players.GetPlayer(player.GamePlayerId)));
+            }
+            else if (Mathf.Abs(ReInput.players.GetPlayer(player.GamePlayerId).GetAxis("Horizontal Menu")) > 0.5f && canUpdateEditable)
+            {
+                StartCoroutine(WaitForEditValuegUpdate(ReInput.players.GetPlayer(player.GamePlayerId)));
             }
         }
     }
 
-    private IEnumerator WaitForEditUpdate(Player currentPlayer)
+    private IEnumerator WaitForSelectedEditableUpdate(Player currentPlayer)
     {
         canUpdateEditable = false;
-        UpdateEditable(currentPlayer.GetAxis("Vertical Menu"));
+        UpdateSelectedEditable(currentPlayer.GetAxis("Vertical Menu"));
         yield return new WaitForSeconds(0.3f);
         canUpdateEditable = true;
     }
 
-    public void UpdateEditable(float change)
+    private void UpdateSelectedEditable(float change)
     {
         if (change > 0)
         {
@@ -102,18 +78,18 @@ public class EditLevelController : MonoBehaviour
             change = 1;
         }
 
-        HighLightEditableItem(false, AllEditableValues[currentEditable]);
-        currentEditable += (int)change;
+        HighLightEditableItem(false, AllEditableValues[currentEditableItem]);
+        currentEditableItem += (int)change;
 
-        if (currentEditable < 0)
+        if (currentEditableItem < 0)
         {
-            currentEditable = AllEditableValues.Length - 1;
+            currentEditableItem = AllEditableValues.Length - 1;
         }
-        else if (currentEditable == AllEditableValues.Length)
+        else if (currentEditableItem == AllEditableValues.Length)
         {
-            currentEditable = 0;
+            currentEditableItem = 0;
         }
-        HighLightEditableItem(true, AllEditableValues[currentEditable]);
+        HighLightEditableItem(true, AllEditableValues[currentEditableItem]);
     }
 
     private void HighLightEditableItem(bool highlight, GameObject EditItem)
@@ -140,6 +116,40 @@ public class EditLevelController : MonoBehaviour
             text.color = color;
             text.fontStyle = style;
         }
+    }
+
+    private IEnumerator WaitForEditValuegUpdate(Player currentPlayer)
+    {
+        canUpdateEditable = false;
+        UpdateEditableValue(currentPlayer.GetAxis("Horizontal Menu"));
+        yield return new WaitForSeconds(0.3f);
+        canUpdateEditable = true;
+    }
+
+    private void UpdateEditableValue(float change)
+    {
+        if (change > 0)
+        {
+            change = 1;
+        }
+        else if (change < 0)
+        {
+            change = -1;
+        }
+
+        currentEditableValues[currentEditableItem] += (int)change;
+
+        if (currentEditableValues[currentEditableItem] < 0)
+        {
+            currentEditableValues[currentEditableItem] = EditableData.AllEditableData[currentEditableItem].Count - 1;
+        }
+        else if (currentEditableValues[currentEditableItem] == AllEditableValues.Length)
+        {
+            currentEditableValues[currentEditableItem] = 0;
+        }
+
+        AllEditableValues[currentEditableItem].GetComponentsInChildren<Text>()[1].text = 
+            EditableData.AllEditableData[currentEditableItem][currentEditableValues[currentEditableItem]].First;
     }
 
 }

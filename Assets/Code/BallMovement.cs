@@ -13,13 +13,13 @@ public class BallMovement : MonoBehaviour
 
     private void Start()
     {
-        if (GameData.k_Players[PlayerNum] == null)
+        if (SessionData.k_Players[PlayerNum] == null)
         {
             Destroy(this.gameObject);
         }
         else
         {
-            this.GetComponent<BallBeam>().SetColor(GameData.k_Players[PlayerNum].PlayerColor);
+            this.GetComponent<BallBeam>().SetColor(SessionData.k_Players[PlayerNum].PlayerColor);
         }
     }
 
