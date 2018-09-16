@@ -21,7 +21,7 @@ public class EditLevelController : MonoBehaviour
         overallController = GameObject.FindGameObjectWithTag("Overall Controller");
 
         canUpdateEditable = true;
-        currentEditableValues = new int[] { 2, 2, 2, 4, 2 };
+        currentEditableValues = new int[] { 2, 2, 2, 2 };
 
         HighLightEditableItem(true, AllEditableValues[currentEditableItem]);
         overallController.GetComponent<GameData>().SetToDefaults();
@@ -38,7 +38,7 @@ public class EditLevelController : MonoBehaviour
 
         foreach (PlayerData player in SessionData.Instance.GetNonNullPlayers().Where(x => x.PanelData.PlayerLocked == true))
         {
-            if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && currentEditableItem == EditableData.AllEditableData.Count 
+            if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && currentEditableItem == EditableData.AllEditableData.Count
                 && !SessionData.Instance.InputBlocked)
             {
                 overallController.GetComponent<GameData>().NumberRounds = EditableData.AllEditableData[0][currentEditableValues[0]].Second;
