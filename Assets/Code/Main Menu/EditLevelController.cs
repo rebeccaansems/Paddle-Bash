@@ -9,20 +9,23 @@ public class EditLevelController : MonoBehaviour
 {
     public GameObject[] AllEditableValues;
     public EditableGameData EditableData;
-    public Animator ContinueAnimator;
+    public Animator ContinueAnimator, LevelSelectAnimator, EditLevelAnimator;
 
     private GameObject overallController;
     private int[] currentEditableValues;
     private int currentEditableItem;
     private bool canUpdateEditable;
 
-    private void Start()
+    private void OnEnable()
     {
+        Debug.Log("!");
         overallController = GameObject.FindGameObjectWithTag("Overall Controller");
 
         canUpdateEditable = true;
         currentEditableValues = new int[] { 2, 2, 2, 2 };
 
+        HighLightEditableItem(false, AllEditableValues[currentEditableItem]);
+        currentEditableItem = 0;
         HighLightEditableItem(true, AllEditableValues[currentEditableItem]);
         overallController.GetComponent<GameData>().SetToDefaults();
     }
@@ -55,6 +58,16 @@ public class EditLevelController : MonoBehaviour
             else if (Mathf.Abs(ReInput.players.GetPlayer(player.GamePlayerId).GetAxis("Horizontal Menu")) > 0.5f && canUpdateEditable)
             {
                 StartCoroutine(WaitForEditValuegUpdate(ReInput.players.GetPlayer(player.GamePlayerId)));
+            }
+            else if (ReInput.players.GetPlayer(player.GamePlayerId).GetButtonDown("Back") && !SessionData.Instance.InputBlocked)
+            {
+                this.GetComponent<LevelSelectContoller>().enabled = true;
+                this.GetComponent<EditLevelController>().enabled = false;
+
+                ContinueAnimator.SetBool("GameCanStart", false);
+                EditLevelAnimator.SetBool("isOnEditLevelScreen", false);
+                LevelSelectAnimator.SetBool("isOnLevelSelectScreen", true);
+                StartCoroutine(DisableInput());
             }
         }
     }
@@ -155,4 +168,10 @@ public class EditLevelController : MonoBehaviour
         }
     }
 
+    IEnumerator DisableInput()
+    {
+        SessionData.Instance.InputBlocked = true;
+        yield return new WaitForSeconds(3);
+        SessionData.Instance.InputBlocked = false;
+    }
 }
