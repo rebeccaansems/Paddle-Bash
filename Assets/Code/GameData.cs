@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class GameData : MonoBehaviour
 {
+    private static GameData _instance;
+
+    public static GameData Instance { get { return _instance; } }
+
     public int NumberRounds, TimeLimit, ScoreLimit;
     public float Speed;
 

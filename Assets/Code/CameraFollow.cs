@@ -22,7 +22,7 @@ public class CameraFollow : MonoBehaviour
         if (follow != -1)
         {
             Vector3 point = this.GetComponent<Camera>().WorldToViewportPoint(Players[follow].position);
-            Vector3 delta = Players[follow].position - this.GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z)); //(new Vector3(0.5, 0.5, point.z));
+            Vector3 delta = Players[follow].position - this.GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z));
             Vector3 destination = transform.position + delta;
             transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
         }
@@ -37,7 +37,7 @@ public class CameraFollow : MonoBehaviour
         OrthoCamera.orthographicSize = 1.4f;
         OrthoCamera.transform.parent = this.transform;
         
-        Time.timeScale = 0.4f;
+        Time.timeScale = 0.4f * GameData.Instance.Speed;
         Time.fixedDeltaTime = Time.fixedDeltaTime * Time.timeScale;
 
         StartCoroutine(RestartGame());
@@ -47,7 +47,7 @@ public class CameraFollow : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(3);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        Time.timeScale = 1;
+        Time.timeScale = 1 * GameData.Instance.Speed;
         Time.fixedDeltaTime = 0.02F;
     }
 }

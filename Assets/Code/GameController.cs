@@ -12,8 +12,12 @@ public class GameController : MonoBehaviour
     public GameObject[] Players;
     public Vector2[] BallSpawnLocations;
 
+    private GameObject overallController;
+
     void Start()
     {
+        overallController = GameObject.FindGameObjectWithTag("Overall Controller");
+
         string currScore = "";
         foreach (PlayerData players in SessionData.Instance.Players.Where(x => x != null))
         {
@@ -31,5 +35,9 @@ public class GameController : MonoBehaviour
             newBall.GetComponent<BallBeam>().SetColor(SessionData.Instance.Players[i].PlayerColor);
             newBall.GetComponent<BallMovement>().LinkedPlayer = Players[i];
         }
+    }
+
+    void SetupGameData()
+    {
     }
 }
