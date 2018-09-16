@@ -10,6 +10,7 @@ public class EditLevelController : MonoBehaviour
     public GameObject[] AllEditableValues;
     public EditableGameData EditableData;
     public Animator ContinueAnimator, LevelSelectAnimator, EditLevelAnimator;
+    public Image MapImage;
 
     private GameObject overallController;
     private int[] currentEditableValues;
@@ -18,7 +19,6 @@ public class EditLevelController : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log("!");
         overallController = GameObject.FindGameObjectWithTag("Overall Controller");
 
         canUpdateEditable = true;
@@ -27,7 +27,6 @@ public class EditLevelController : MonoBehaviour
         HighLightEditableItem(false, AllEditableValues[currentEditableItem]);
         currentEditableItem = 0;
         HighLightEditableItem(true, AllEditableValues[currentEditableItem]);
-        overallController.GetComponent<GameData>().SetToDefaults();
     }
 
     void Update()
