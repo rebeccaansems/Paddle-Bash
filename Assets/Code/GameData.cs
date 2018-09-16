@@ -1,36 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Rewired;
-using System.Linq;
 
 public class GameData : MonoBehaviour
 {
-    public static PlayerData[] k_Players;
-    public static List<int> k_RawRewiredPlayerIds;
-    public static int k_CurrentLevel, k_ReadyPlayersJoined;
-    public static MenuScreens k_CurrentMenuScreen;
-    public static bool k_InputBlocked;
+    public int NumberRounds, TimeLimit, ScoreLimit;
+    public float Speed;
 
-    public enum MenuScreens
+    private List<float> allSpeeds = new List<float> { 0.25f, 0.5f, 1f, 1.5f, 2f };
+
+    public void SetToDefaults()
     {
-        PlayerJoin,
-        LevelSelect,
-        EditLevel
+        NumberRounds = 5;
+        TimeLimit = 180;
+        ScoreLimit = 5;
+        Speed = 1;
     }
 
-    void Start()
+    public void SetSpeed(int index)
     {
-        DontDestroyOnLoad(this.gameObject);
-        k_Players = new PlayerData[4];
-        k_RawRewiredPlayerIds = new List<int>();
-        k_InputBlocked = false;
-        k_ReadyPlayersJoined = 0;
-        k_CurrentMenuScreen = MenuScreens.PlayerJoin;
-    }
-
-    public static PlayerData[] GetNonNullPlayers()
-    {
-        return k_Players.Where(x => x != null).ToArray();
+        Speed = allSpeeds[index];
     }
 }

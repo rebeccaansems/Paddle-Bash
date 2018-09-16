@@ -15,20 +15,20 @@ public class GameController : MonoBehaviour
     void Start()
     {
         string currScore = "";
-        foreach (PlayerData players in GameData.k_Players.Where(x => x != null))
+        foreach (PlayerData players in SessionData.Instance.Players.Where(x => x != null))
         {
             currScore += players.Score + " | ";
         }
         CurrentScore.text = currScore.TrimEnd('|', ' ');
 
-        for (int i = 0; i < GameData.k_Players.Where(x => x != null).ToArray().Length; i++)
+        for (int i = 0; i < SessionData.Instance.Players.Where(x => x != null).ToArray().Length; i++)
         {
             var newBall = Instantiate(Ball);
             newBall.transform.position = BallSpawnLocations[i];
             newBall.transform.parent = BallParent;
             newBall.GetComponent<BallMovement>().Camera = FollowCamera;
             newBall.GetComponent<BallMovement>().PlayerNum = i;
-            newBall.GetComponent<BallBeam>().SetColor(GameData.k_Players[i].PlayerColor);
+            newBall.GetComponent<BallBeam>().SetColor(SessionData.Instance.Players[i].PlayerColor);
             newBall.GetComponent<BallMovement>().LinkedPlayer = Players[i];
         }
     }

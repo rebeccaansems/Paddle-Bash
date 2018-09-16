@@ -8,20 +8,20 @@ public class HeaderController : MonoBehaviour
 
     public Text HeaderText;
 
-    private GameData.MenuScreens currentScreen;
+    private SessionData.MenuScreens currentScreen;
 
     private void Start()
     {
-        HeaderText.text = GameData.k_CurrentMenuScreen.ToString();
-        currentScreen = GameData.k_CurrentMenuScreen;
+        HeaderText.text = SessionData.Instance.CurrentMenuScreen.ToString();
+        currentScreen = SessionData.Instance.CurrentMenuScreen;
     }
 
     private void Update()
     {
-        if (currentScreen != GameData.k_CurrentMenuScreen)
+        if (currentScreen != SessionData.Instance.CurrentMenuScreen)
         {
-            HeaderText.text = GameData.k_CurrentMenuScreen.ToString();
-            currentScreen = GameData.k_CurrentMenuScreen;
+            HeaderText.text = SessionData.Instance.CurrentMenuScreen.ToString();
+            currentScreen = SessionData.Instance.CurrentMenuScreen;
         }
     }
 }

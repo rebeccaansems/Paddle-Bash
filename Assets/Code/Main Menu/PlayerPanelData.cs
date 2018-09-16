@@ -33,12 +33,12 @@ public class PlayerPanelData : MonoBehaviour
 
     private void Update()
     {
-        if (GameData.k_Players[PlayerId] != null && playerJoined == false)
+        if (SessionData.Instance.Players[PlayerId] != null && playerJoined == false)
         {
             playerJoined = true;
             animator.SetBool("PlayerJoined", true);
-            currentPlayer = ReInput.players.GetPlayer(GameData.k_Players[PlayerId].RewiredPlayerId);
-            GameData.k_Players[PlayerId].PanelData = this;
+            currentPlayer = ReInput.players.GetPlayer(SessionData.Instance.Players[PlayerId].RewiredPlayerId);
+            SessionData.Instance.Players[PlayerId].PanelData = this;
             UpdateColors(1);
         }
         else if (playerJoined == true && PlayerLocked == false && animator.GetCurrentAnimatorStateInfo(0).IsName("Waiting Joined"))
@@ -103,7 +103,7 @@ public class PlayerPanelData : MonoBehaviour
         {
             colorIsValid = true;
 
-            foreach (PlayerData player in GameData.GetNonNullPlayers())
+            foreach (PlayerData player in SessionData.Instance.GetNonNullPlayers())
             {
                 if (player.PlayerColor == ColorNumber && player.PanelData.PlayerId != PlayerId)
                 {
@@ -124,9 +124,9 @@ public class PlayerPanelData : MonoBehaviour
     {
         PlayerLocked = true;
         animator.SetBool("PlayerLockedIn", true);
-        GameData.k_Players[PlayerId].PlayerColor = ColorNumber;
+        SessionData.Instance.Players[PlayerId].PlayerColor = ColorNumber;
 
-        foreach (PlayerData player in GameData.GetNonNullPlayers())
+        foreach (PlayerData player in SessionData.Instance.GetNonNullPlayers())
         {
             if (player.PanelData.PlayerId != PlayerId && !player.PanelData.PlayerLocked && player.PanelData.ColorNumber == ColorNumber)
             {
@@ -139,15 +139,15 @@ public class PlayerPanelData : MonoBehaviour
     {
         PlayerLocked = false;
         animator.SetBool("PlayerLockedIn", false);
-        GameData.k_Players[PlayerId].PlayerColor = -1;
+        SessionData.Instance.Players[PlayerId].PlayerColor = -1;
     }
 
     private void UnjoinedPlayer()
     {
         animator.SetBool("PlayerJoined", false);
 
-        GameData.k_RawRewiredPlayerIds.Remove(GameData.k_Players[PlayerId].RewiredPlayerId);
-        GameData.k_Players[PlayerId] = null;
+        SessionData.Instance.RawRewiredPlayerIds.Remove(SessionData.Instance.Players[PlayerId].RewiredPlayerId);
+        SessionData.Instance.Players[PlayerId] = null;
 
         playerJoined = false;
         PlayerLocked = false;
