@@ -11,7 +11,6 @@ public class LevelSelectContoller : MonoBehaviour
     public Animator[] SinglePlayerPanels;
 
     public Image CurrentLevel;
-    public Sprite[] GameplayLevelsArt;
 
     public Text CurrentLevelText;
 
@@ -90,8 +89,8 @@ public class LevelSelectContoller : MonoBehaviour
             SessionData.Instance.CurrentLevel = 0;
         }
 
-        CurrentLevel.sprite = GameplayLevelsArt[SessionData.Instance.CurrentLevel];
-        CurrentLevelText.text = "LEVEL " + (SessionData.Instance.CurrentLevel + 1).ToString("00");
+        CurrentLevel.sprite = SessionData.Instance.AllMapImages[SessionData.Instance.CurrentLevel];
+        CurrentLevelText.text = "MAP " + (SessionData.Instance.CurrentLevel + 1).ToString("00");
 
         yield return new WaitForSeconds(0.5f);
 

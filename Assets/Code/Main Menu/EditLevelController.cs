@@ -10,7 +10,8 @@ public class EditLevelController : MonoBehaviour
     public GameObject[] AllEditableValues;
     public EditableGameData EditableData;
     public Animator ContinueAnimator, LevelSelectAnimator, EditLevelAnimator;
-    public Image MapImage;
+    public Image CurrentLevelArtImage;
+    public Text CurrentLevelText;
 
     private GameObject overallController;
     private int[] currentEditableValues;
@@ -27,6 +28,9 @@ public class EditLevelController : MonoBehaviour
         HighLightEditableItem(false, AllEditableValues[currentEditableItem]);
         currentEditableItem = 0;
         HighLightEditableItem(true, AllEditableValues[currentEditableItem]);
+
+        CurrentLevelArtImage.sprite = SessionData.Instance.AllMapImages[SessionData.Instance.CurrentLevel];
+        CurrentLevelText.text = "MAP " + (SessionData.Instance.CurrentLevel + 1).ToString("00");
     }
 
     void Update()

@@ -17,6 +17,7 @@ public class SessionData : MonoBehaviour
     public int CurrentLevel, ReadyPlayersJoined;
     public MenuScreens CurrentMenuScreen;
     public bool InputBlocked;
+    public Sprite[] AllMapImages;
 
     public enum MenuScreens
     {
