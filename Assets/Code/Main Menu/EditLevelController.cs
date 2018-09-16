@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class EditLevelController : MonoBehaviour
 {
     public GameObject[] AllEditableValues, AllPlayersPaddles;
-    public EditableGameData EditableData;
     public Animator ContinueAnimator, LevelSelectAnimator, EditLevelAnimator;
     public Image CurrentLevelArtImage;
     public Text CurrentLevelText;
@@ -42,17 +41,17 @@ public class EditLevelController : MonoBehaviour
             SessionData.Instance.CurrentMenuScreen = SessionData.MenuScreens.EditLevel;
         }
 
-        ContinueAnimator.SetBool("GameCanStart", currentEditableItem == EditableData.AllEditableData.Count);
+        ContinueAnimator.SetBool("GameCanStart", currentEditableItem == this.GetComponent<EditableGameData>().AllEditableData.Count);
 
         foreach (PlayerData player in SessionData.Instance.GetNonNullPlayers().Where(x => x.PanelData.PlayerLocked == true))
         {
-            if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && currentEditableItem == EditableData.AllEditableData.Count
+            if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && currentEditableItem == this.GetComponent<EditableGameData>().AllEditableData.Count
                 && !SessionData.Instance.InputBlocked)
             {
-                overallController.GetComponent<GameData>().NumberRounds = EditableData.AllEditableData[0][currentEditableValues[0]].Second;
-                overallController.GetComponent<GameData>().TimeLimit = EditableData.AllEditableData[1][currentEditableValues[1]].Second;
-                overallController.GetComponent<GameData>().ScoreLimit = EditableData.AllEditableData[2][currentEditableValues[2]].Second;
-                overallController.GetComponent<GameData>().SetSpeed(EditableData.AllEditableData[3][currentEditableValues[3]].Second);
+                overallController.GetComponent<GameData>().NumberRounds = this.GetComponent<EditableGameData>().AllEditableData[0][currentEditableValues[0]].Second;
+                overallController.GetComponent<GameData>().TimeLimit = this.GetComponent<EditableGameData>().AllEditableData[1][currentEditableValues[1]].Second;
+                overallController.GetComponent<GameData>().ScoreLimit = this.GetComponent<EditableGameData>().AllEditableData[2][currentEditableValues[2]].Second;
+                overallController.GetComponent<GameData>().SetSpeed(this.GetComponent<EditableGameData>().AllEditableData[3][currentEditableValues[3]].Second);
 
                 overallController.GetComponent<LevelLoader>().LoadLevel(SessionData.Instance.GameplayLevels[SessionData.Instance.CurrentLevel]);
             }
@@ -158,11 +157,11 @@ public class EditLevelController : MonoBehaviour
 
         currentEditableValues[currentEditableItem] += (int)change;
 
-        if (currentEditableItem != EditableData.AllEditableData.Count)
+        if (currentEditableItem != this.GetComponent<EditableGameData>().AllEditableData.Count)
         {
             if (currentEditableValues[currentEditableItem] < 0)
             {
-                currentEditableValues[currentEditableItem] = EditableData.AllEditableData[currentEditableItem].Count - 1;
+                currentEditableValues[currentEditableItem] = this.GetComponent<EditableGameData>().AllEditableData[currentEditableItem].Count - 1;
             }
             else if (currentEditableValues[currentEditableItem] == AllEditableValues.Length)
             {
@@ -170,7 +169,7 @@ public class EditLevelController : MonoBehaviour
             }
 
             AllEditableValues[currentEditableItem].GetComponentsInChildren<Text>()[1].text =
-                EditableData.AllEditableData[currentEditableItem][currentEditableValues[currentEditableItem]].First;
+                this.GetComponent<EditableGameData>().AllEditableData[currentEditableItem][currentEditableValues[currentEditableItem]].First;
         }
     }
 
