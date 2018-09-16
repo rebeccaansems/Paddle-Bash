@@ -17,16 +17,16 @@ public class LevelSelectContoller : MonoBehaviour
 
     public void Update()
     {
-        if (SessionData.k_CurrentMenuScreen != SessionData.MenuScreens.LevelSelect)
+        if (SessionData.Instance.CurrentMenuScreen != SessionData.MenuScreens.LevelSelect)
         {
-            SessionData.k_CurrentMenuScreen = SessionData.MenuScreens.LevelSelect;
+            SessionData.Instance.CurrentMenuScreen = SessionData.MenuScreens.LevelSelect;
         }
 
-        ContinueAnimator.SetBool("GameCanStart", !SessionData.k_InputBlocked && LevelSelectAnimator.GetBool("isOnLevelSelectScreen"));
+        ContinueAnimator.SetBool("GameCanStart", !SessionData.Instance.InputBlocked && LevelSelectAnimator.GetBool("isOnLevelSelectScreen"));
 
-        foreach (PlayerData player in SessionData.GetNonNullPlayers().Where(x => x.PanelData.PlayerLocked == true))
+        foreach (PlayerData player in SessionData.Instance.GetNonNullPlayers().Where(x => x.PanelData.PlayerLocked == true))
         {
-            if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && !SessionData.k_InputBlocked)
+            if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && !SessionData.Instance.InputBlocked)
             {
                 LevelSelectAnimator.SetBool("isOnLevelSelectScreen", false);
                 ContinueAnimator.SetBool("GameCanStart", false);
@@ -43,7 +43,7 @@ public class LevelSelectContoller : MonoBehaviour
             }
             else if (LevelSelectAnimator.GetBool("isOnLevelSelectScreen") == true)
             {
-                if (ReInput.players.GetPlayer(player.GamePlayerId).GetButtonDown("Back") && !SessionData.k_InputBlocked)
+                if (ReInput.players.GetPlayer(player.GamePlayerId).GetButtonDown("Back") && !SessionData.Instance.InputBlocked)
                 {
                     this.GetComponent<LevelSelectContoller>().enabled = false;
                     this.GetComponent<PlayerJoinController>().enabled = true;
@@ -80,18 +80,18 @@ public class LevelSelectContoller : MonoBehaviour
     {
         yield return new WaitForSeconds(0.3f);
 
-        SessionData.k_CurrentLevel += change;
-        if (SessionData.k_CurrentLevel < 0)
+        SessionData.Instance.CurrentLevel += change;
+        if (SessionData.Instance.CurrentLevel < 0)
         {
-            SessionData.k_CurrentLevel = SessionData.k_GameplayLevels.Length - 1;
+            SessionData.Instance.CurrentLevel = SessionData.Instance.GameplayLevels.Length - 1;
         }
-        else if (SessionData.k_CurrentLevel == SessionData.k_GameplayLevels.Length)
+        else if (SessionData.Instance.CurrentLevel == SessionData.Instance.GameplayLevels.Length)
         {
-            SessionData.k_CurrentLevel = 0;
+            SessionData.Instance.CurrentLevel = 0;
         }
 
-        CurrentLevel.sprite = GameplayLevelsArt[SessionData.k_CurrentLevel];
-        CurrentLevelText.text = "LEVEL " + (SessionData.k_CurrentLevel + 1).ToString("00");
+        CurrentLevel.sprite = GameplayLevelsArt[SessionData.Instance.CurrentLevel];
+        CurrentLevelText.text = "LEVEL " + (SessionData.Instance.CurrentLevel + 1).ToString("00");
 
         yield return new WaitForSeconds(0.5f);
 
@@ -100,8 +100,8 @@ public class LevelSelectContoller : MonoBehaviour
 
     IEnumerator DisableInput()
     {
-        SessionData.k_InputBlocked = true;
+        SessionData.Instance.InputBlocked = true;
         yield return new WaitForSeconds(3);
-        SessionData.k_InputBlocked = false;
+        SessionData.Instance.InputBlocked = false;
     }
 }

@@ -6,12 +6,17 @@ using System.Linq;
 
 public class SessionData : MonoBehaviour
 {
-    public static PlayerData[] k_Players;
-    public static int[] k_GameplayLevels;
-    public static List<int> k_RawRewiredPlayerIds;
-    public static int k_CurrentLevel, k_ReadyPlayersJoined;
-    public static MenuScreens k_CurrentMenuScreen;
-    public static bool k_InputBlocked;
+    private static SessionData _instance;
+
+    public static SessionData Instance { get { return _instance; } }
+    
+    public PlayerData[] Players;
+    public int[] GameplayLevels;
+    [HideInInspector]
+    public List<int> RawRewiredPlayerIds;
+    public int CurrentLevel, ReadyPlayersJoined;
+    public MenuScreens CurrentMenuScreen;
+    public bool InputBlocked;
 
     public enum MenuScreens
     {
@@ -19,19 +24,32 @@ public class SessionData : MonoBehaviour
         LevelSelect,
         EditLevel
     }
+    
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
 
     void Start()
     {
         DontDestroyOnLoad(this.gameObject);
-        k_Players = new PlayerData[4];
-        k_RawRewiredPlayerIds = new List<int>();
-        k_InputBlocked = false;
-        k_ReadyPlayersJoined = 0;
-        k_CurrentMenuScreen = MenuScreens.PlayerJoin;
+        Players = new PlayerData[4];
+        RawRewiredPlayerIds = new List<int>();
+        InputBlocked = false;
+        ReadyPlayersJoined = 0;
+        CurrentMenuScreen = MenuScreens.PlayerJoin;
     }
 
-    public static PlayerData[] GetNonNullPlayers()
+    public PlayerData[] GetNonNullPlayers()
     {
-        return k_Players.Where(x => x != null).ToArray();
+        return Players.Where(x => x != null).ToArray();
     }
 }
+

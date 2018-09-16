@@ -12,16 +12,16 @@ public class HeaderController : MonoBehaviour
 
     private void Start()
     {
-        HeaderText.text = SessionData.k_CurrentMenuScreen.ToString();
-        currentScreen = SessionData.k_CurrentMenuScreen;
+        HeaderText.text = SessionData.Instance.CurrentMenuScreen.ToString();
+        currentScreen = SessionData.Instance.CurrentMenuScreen;
     }
 
     private void Update()
     {
-        if (currentScreen != SessionData.k_CurrentMenuScreen)
+        if (currentScreen != SessionData.Instance.CurrentMenuScreen)
         {
-            HeaderText.text = SessionData.k_CurrentMenuScreen.ToString();
-            currentScreen = SessionData.k_CurrentMenuScreen;
+            HeaderText.text = SessionData.Instance.CurrentMenuScreen.ToString();
+            currentScreen = SessionData.Instance.CurrentMenuScreen;
         }
     }
 }

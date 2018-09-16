@@ -32,25 +32,25 @@ public class PlayerJoinController : MonoBehaviour
 
     void Update()
     {
-        if (SessionData.k_CurrentMenuScreen != SessionData.MenuScreens.PlayerJoin)
+        if (SessionData.Instance.CurrentMenuScreen != SessionData.MenuScreens.PlayerJoin)
         {
-            SessionData.k_CurrentMenuScreen = SessionData.MenuScreens.PlayerJoin;
+            SessionData.Instance.CurrentMenuScreen = SessionData.MenuScreens.PlayerJoin;
         }
 
         for (int i = 0; i < ReInput.players.allPlayerCount - 1; i++)
         {
-            if (ReInput.players.GetPlayer(i).GetButtonDown("Enter") && !SessionData.k_RawRewiredPlayerIds.Contains(ReInput.players.GetPlayer(i).id))
+            if (ReInput.players.GetPlayer(i).GetButtonDown("Enter") && !SessionData.Instance.RawRewiredPlayerIds.Contains(ReInput.players.GetPlayer(i).id))
             {
-                SessionData.k_Players[System.Array.IndexOf(SessionData.k_Players, null)] = new PlayerData(ReInput.players.GetPlayer(i).id, gamePlayerIdCounter);
-                SessionData.k_RawRewiredPlayerIds.Add(ReInput.players.GetPlayer(i).id);
+                SessionData.Instance.Players[System.Array.IndexOf(SessionData.Instance.Players, null)] = new PlayerData(ReInput.players.GetPlayer(i).id, gamePlayerIdCounter);
+                SessionData.Instance.RawRewiredPlayerIds.Add(ReInput.players.GetPlayer(i).id);
                 gamePlayerIdCounter++;
             }
         }
 
-        int readyPlayers = SessionData.k_Players.Where(x => x != null && x.PanelData != null && x.PanelData.PlayerLocked == true).Count();
+        int readyPlayers = SessionData.Instance.Players.Where(x => x != null && x.PanelData != null && x.PanelData.PlayerLocked == true).Count();
         if (readyPlayers > 1 && !ContinueAnimator.GetBool("GameCanStart"))
         {
-            if (levelSelectAnimator.GetBool("isOnLevelSelectScreen") == false && !SessionData.k_InputBlocked)
+            if (levelSelectAnimator.GetBool("isOnLevelSelectScreen") == false && !SessionData.Instance.InputBlocked)
             {
                 ContinueAnimator.SetBool("GameCanStart", true);
             }
@@ -61,10 +61,10 @@ public class PlayerJoinController : MonoBehaviour
         }
         else if (readyPlayers > 1 && ContinueAnimator.GetBool("GameCanStart"))
         {
-            foreach (PlayerData player in SessionData.GetNonNullPlayers().Where(x => x.PanelData.PlayerLocked == true))
+            foreach (PlayerData player in SessionData.Instance.GetNonNullPlayers().Where(x => x.PanelData.PlayerLocked == true))
             {
-                if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && !SessionData.k_InputBlocked
-                    && levelSelectAnimator.GetBool("isOnLevelSelectScreen") == false && SessionData.k_ReadyPlayersJoined == 2)
+                if (ReInput.players.GetPlayer(player.RewiredPlayerId).GetButtonDown("Enter") && !SessionData.Instance.InputBlocked
+                    && levelSelectAnimator.GetBool("isOnLevelSelectScreen") == false && SessionData.Instance.ReadyPlayersJoined == 2)
                 {
                     foreach (Animator anim in SinglePlayerPanels)
                     {
@@ -89,8 +89,8 @@ public class PlayerJoinController : MonoBehaviour
 
     IEnumerator DisableInput()
     {
-        SessionData.k_InputBlocked = true;
+        SessionData.Instance.InputBlocked = true;
         yield return new WaitForSeconds(1);
-        SessionData.k_InputBlocked = false;
+        SessionData.Instance.InputBlocked = false;
     }
 }
