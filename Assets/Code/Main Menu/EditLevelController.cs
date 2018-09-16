@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class EditLevelController : MonoBehaviour
 {
-    public GameObject[] AllEditableValues;
+    public GameObject[] AllEditableValues, AllPlayersPaddles;
     public EditableGameData EditableData;
     public Animator ContinueAnimator, LevelSelectAnimator, EditLevelAnimator;
     public Image CurrentLevelArtImage;
@@ -31,6 +31,8 @@ public class EditLevelController : MonoBehaviour
 
         CurrentLevelArtImage.sprite = SessionData.Instance.AllMapImages[SessionData.Instance.CurrentLevel];
         CurrentLevelText.text = "MAP " + (SessionData.Instance.CurrentLevel + 1).ToString("00");
+
+        StartCoroutine(UpdatePlayerPanels(0.6f, true));
     }
 
     void Update()
@@ -64,13 +66,14 @@ public class EditLevelController : MonoBehaviour
             }
             else if (ReInput.players.GetPlayer(player.GamePlayerId).GetButtonDown("Back") && !SessionData.Instance.InputBlocked)
             {
-                this.GetComponent<LevelSelectContoller>().enabled = true;
-                this.GetComponent<EditLevelController>().enabled = false;
-
                 ContinueAnimator.SetBool("GameCanStart", false);
                 EditLevelAnimator.SetBool("isOnEditLevelScreen", false);
                 LevelSelectAnimator.SetBool("isOnLevelSelectScreen", true);
+                StartCoroutine(UpdatePlayerPanels(0.35f, false));
                 StartCoroutine(DisableInput());
+
+                this.GetComponent<LevelSelectContoller>().enabled = true;
+                this.GetComponent<EditLevelController>().enabled = false;
             }
         }
     }
@@ -176,5 +179,20 @@ public class EditLevelController : MonoBehaviour
         SessionData.Instance.InputBlocked = true;
         yield return new WaitForSeconds(3);
         SessionData.Instance.InputBlocked = false;
+    }
+
+    IEnumerator UpdatePlayerPanels(float waitTime, bool showPlayers)
+    {
+        yield return new WaitForSeconds(waitTime);
+        for (int i = 0; i < SessionData.Instance.GetNonNullPlayers().Length; i++)
+        {
+            AllPlayersPaddles[i].SetActive(showPlayers);
+            AllPlayersPaddles[i].GetComponent<PaddleBeam>().SetColor(SessionData.Instance.GetNonNullPlayers()[i].PlayerColor);
+        }
+        yield return new WaitForSeconds(0.08f);
+        for (int i = 0; i < SessionData.Instance.GetNonNullPlayers().Length; i++)
+        {
+            AllPlayersPaddles[i].transform.GetChild(1).gameObject.SetActive(showPlayers);
+        }
     }
 }
